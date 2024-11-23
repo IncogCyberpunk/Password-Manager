@@ -4,10 +4,7 @@ const checkPassword = async (pass, hashPass,res) => {
     try {
         const correct = await bcryptjs.compare(pass, hashPass);
         if (correct) {
-            console.log("Logged In Successfully")
-            return res.status(200).json({
-                "message": "Success logging in"
-            })
+            return true
         }
         else
         console.log("Incorrect Password")

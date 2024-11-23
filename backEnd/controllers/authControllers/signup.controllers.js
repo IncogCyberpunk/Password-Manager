@@ -1,62 +1,77 @@
 import User from "../../models/users.models.js";
+import Token from "../../models/token.models.js";
 import HashPassword from "../../utils/passwordUtils/hashPassword.js";
-import generateJWT from "../../utils/generateJWT.js";
+import {generateAccessJWT, generateRefreshJWT} from "../../utils/jwtTokens/generateJWT.js";
 import authenticateJWT from "../../middlewares/authenticateJWT.js";
 
-const signUp= async (req,res) => {
+const signUp = async (req, res) => {
     try {
-        let {fullName ,username,password,confirmPassword,email,gender}= req.body;
-        
+        let { fullName, username, password, confirmPassword, email, gender } = req.body;
 
-        fullName=fullName.trim();
-        username=username.trim();
-        email=email.trim();
+
+        fullName = fullName.trim();
+        username = username.trim();
+        email = email.trim();
         gender = gender.toLowerCase();
 
-        if (password != confirmPassword){
+        if (password != confirmPassword) {
             return res.status(400).json({
                 "error": "Passwords do not match"
             })
         }
 
 
-        let existingUser= await User.findOne({username,email});
+        let existingUser = await User.findOne({ username, email });
 
-        if(existingUser){
+        if (existingUser) {
             return res.status(400).json({
-                "error":"User already exists !! Please login "
+                "error": "User already exists !! Please login "
             })
         }
+        
+        // hashing password
+        const hashedPassword = await HashPassword(password);
 
-        const hashedPassword=await HashPassword(password);
+        // creating a new user object
+        const newUser = new User({ fullName, username, password: hashedPassword, email, gender });
+        
+        try {
+            
+            // Save user into the database iff , signup process is successful and token creation is also successful
+            await newUser.save();
+            console.log(`Signup successful and user added to the database`)
+            
+            // CREATE TOKENS ONLY AFTER LOGIN, AS THEY ARE USED FOR AUTHENTICATION, IF NOT CAN BE EXPLOITED BY HACKERS
+            // let accessToken = generateAccessJWT(newUser);
+            // let refreshToken = generateRefreshJWT(newUser);
+            // const newRefreshToken= new Token({
+            //     _userId: newUser._id,
+            //     refreshTokens: refreshToken,
+            // })
+            // await newRefreshToken.save();
+            // console.log(`Saved refresh token into the database`);
 
-        const newUser = new User({ fullName, username, password:hashedPassword, email ,gender});
-        await newUser.save();
+            
+            return res.status(201).json({
+                message: "SignUp Successful",
+                // better practice to use the newUser object's data as this is the final data saved 
+                fullName: newUser.fullName,
+                username: newUser.username,
+                email: newUser.email,
+                gender: newUser.gender,
+            })
 
-        const payload={
-            _id:newUser._id,
-            username,
+        } catch (error) {
+            console.log(error)
+            return res.status(401).json({
+                "message": "Error generating tokens"
+            })
         }
-        const claims={
-            "expiresIn":"60m",
-        }
-        let accessToken = generateJWT(payload,process.env.ACCESS_TOKEN_SECRET,claims);
-
-        res.status(201).json({
-            message: "SignUp Successful",
-            // better practice to use the newUser object's data as this is the final data saved 
-            fullName: newUser.fullName,
-            username: newUser.username,
-            email: newUser.email,
-            gender: newUser.gender,
-            accessToken,
-        })
-        console.log(`Signup successful and user added to the database`)
     } catch (error) {
         console.log(`Error was occured `)
-        console.log(error)  
+        console.log(error)
         return res.status(400).json({
-            "message":"Error performing signup"
+            "message": "Error performing signup"
         })
     }
 }

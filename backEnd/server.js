@@ -1,12 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
+import cookieParser from "cookie-parser"
 
 
 import connectToMongoDB from "./db/connectToMongoDb.js";
 
 import authRoutes from "./routes/auth.routes.js"
-import authenticateJWT from "./middlewares/authenticateJWT.js";
 
 const app =express();
 
@@ -20,13 +20,15 @@ app.set('case sensitive routing', true);
 
 // ↑↑↑↑↑  WORKS FOR THESE TYPES OF ROUTES  ↑↑↑↑↑
 /* 
-    app.get("/aayush",(req,res) => {
-        res.status(200).json({
-            "message":"hello aayush"
-    })
+app.get("/aayush",(req,res) => {
+    console.log(req.cookies)
+    res.status(200).json({
+        "message":"hello aayush"
+})
 })
 */
 
+app.use(cookieParser())
 app.use(express.json());
 app.disable("x-powered-by");
 
