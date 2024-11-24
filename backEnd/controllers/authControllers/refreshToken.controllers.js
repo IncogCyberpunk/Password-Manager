@@ -3,11 +3,7 @@ import { generateAccessJWT, generateRefreshJWT } from "../../utils/jwtTokens/gen
 import authenticateJWT from "../../middlewares/authenticateJWT.js";
 
 const refreshToken = async (req, res) => {
-    //
-    //
-    // NEED TO INTRODUCE CODE TO WATCH OUT FOR EXPIRATION OF ACCESS TOKENS AND REDIRECT THEM TO REFRESH TOKENS ROUTE
-    //
-    //
+    
     try {
         const payload=authenticateJWT(req,res,refresh);
 

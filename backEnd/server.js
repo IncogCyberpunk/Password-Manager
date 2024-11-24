@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import path from "path";
 import cookieParser from "cookie-parser"
-
+import cors from "cors"
 
 import connectToMongoDB from "./db/connectToMongoDb.js";
 
@@ -33,11 +33,20 @@ app.use(express.json());
 app.disable("x-powered-by");
 
   
-const port=process.env.PORT || 3000
+const port=process.env.PORT || 5500
 
+
+// SETTING UP CORS FOR ACCESS FROM FRONTEND DURING DEVELOPMENT
+// app.use(cors())                  // if u want whole app to accept requests made from other origin(different domain) 
+const corsOptions={
+    origin:"http://localhost:3000",
+    methods: ['GET',"POST","PUT","DELETE"],
+    credentials:true, // allows cookies and credentials
+}
 
 // CUSTOM MIDDLEWARES FOR ROUTES
-app.use("/api/auth",authRoutes);
+//cors setup only needed during development
+app.use("/api/auth",cors(corsOptions),authRoutes);
 
 
 app.get("/",(req,res) => {
