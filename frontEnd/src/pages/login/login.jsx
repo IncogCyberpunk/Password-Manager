@@ -6,7 +6,7 @@ import plusAnimated from "../../assets/animatedGIF/login_animated.gif";
 import eyeOpen from "../../assets/animatedGIF/eyeOpen.svg";
 import eyeCross from "../../assets/animatedGIF/eyeClose.svg";
 
-export default function FormComponent() {
+export default function Login() {
   const [eyeState, setEyeState] = useState(eyeCross);
   const [finalLoginData, setFinalLoginData] = useState({});
   const [whichRadio, setwhichRadio] = useState("email");
@@ -60,6 +60,8 @@ export default function FormComponent() {
             >
               <span className="text-3xl">Email or Username</span>
             </label>
+
+            {/* Radios for selecting the type of input field */}
             <div className="flex gap-5 mb-3">
               <input
                 type="text"
@@ -152,7 +154,7 @@ export default function FormComponent() {
 
           {/* Don't have an account? */}
           <div className=" text-center mt-5 cursor-pointer ">
-            <a><span className="font-bold text-2xl underline mt-5 ">Don't Have an Account? Sign Up</span></a>
+            <a><span className="font-bold text-2xl underline mt-5 ">Don't Have an Account? Sign Up !</span></a>
           </div>
           {/* Submit Section */}
           <div className="flex justify-center mt-8 flex- ">
@@ -161,7 +163,7 @@ export default function FormComponent() {
               className="border-x-4 border-y-2 border-gray-600  btnField font-medium text-3xl flex gap-4 items-center"
             >
               <img src={plusAnimated} className="w-16" alt="Plus button" />
-              <span>Submit</span>
+              <span>Log In</span>
             </button>
           </div>
         </div>
