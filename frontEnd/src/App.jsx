@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Introduction from "./components/Introduction";
 import Background from "./components/Background";
 import monitorAccessJWT from "./utilities/monitorAccessJWT.js";
+import Login from "./pages/login/login.jsx"
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
       <main className="z-10">
         <Background>
           <Introduction />
+          <Login/>
         </Background>
       </main>
     </>
@@ -20,3 +22,4 @@ function App() {
 }
 
 export default App;
+ 
