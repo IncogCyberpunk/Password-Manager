@@ -11,7 +11,6 @@ import { useSubmitStatusContext } from "../../context/submitStatus.context";
 
 const broadcastChannel= new BroadcastChannel("submitStatusChannel")
 
-
 export default function Vault() {
   const { retrieveCredentials, retrievedCredentials, setRetrievedCredentials } = useVault();
 
@@ -36,8 +35,10 @@ export default function Vault() {
   // useEffect's primary purpose it to listen for updates to states , so here used to listen for updates to submitStatus from the broadcastChannel
   useEffect(() => {
 
+    // we are adding a event listener to the broadcastChannel to listen for messages
     broadcastChannel.onmessage = (e)=>{
       const {submitStatus}= e.data;
+      console.log(`message received : `,e)
       if(submitStatus){
         console.log('Received update of submitStatus from the BroadcastChannel')
         setSubmitStatus(true);
@@ -50,7 +51,7 @@ export default function Vault() {
     }
     
     
-    //An empty dependency array is used because the BroadcastChannel setup doesn't rely on any state or props and should initialize only once for the component's lifetime
+    //An empty dependency array is used because the BroadcastChannel setup doesn't rely on any state or props and should initialize only once for the component's lifetime 
   },[]);
   
 

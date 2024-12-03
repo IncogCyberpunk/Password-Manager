@@ -51,6 +51,8 @@ export default function useStoreCredentials() {
         
         // broadcast the updated submitStatus
         broadcastChannel.postMessage({submitStatus:true})
+        console.log('Broadcasting submitStatus update');
+        
         console.log(`the submit status is ${submitStatus}`)
         return Promise.resolve(response);
       }
