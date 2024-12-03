@@ -2,7 +2,6 @@ import User from "../../models/users.models.js";
 import ErrorCounter from "../../utils/errorCounter/loginErrorCounter.js";
 import checkPassword from "../../utils/passwordUtils/checkPassword.js";
 import { generateAccessJWT, generateRefreshJWT } from "../../utils/jwtTokens/generateJWT.js";
-import authenticateJWT from "../../middlewares/authenticateJWT.js";
 import Token from "../../models/token.models.js";
 
 const login = async (req, res, next) => {
@@ -15,11 +14,6 @@ const login = async (req, res, next) => {
         const { username, email, password } = req.body;
 
         let userExists;
-        //
-        //
-        // CREATE OPTION TO USE USERNAME OR EMAIL FOR LOGIN AT FRONTEND
-        //
-        //
         if (username?.trim()) {
             try {
                 if (username?.trim().includes("@gmail.com")) {
@@ -35,10 +29,8 @@ const login = async (req, res, next) => {
         }
 
         if (!userExists) {
-            ErrorCounter(true);
-            return res.status(400).json({
-                error: "No such user !!",
-            });
+            ErrorCounter(true, res);
+            throw Error("No such user !!")
         }
 
         const isPasswordValid = await checkPassword(password, userExists.password, res);
@@ -48,7 +40,7 @@ const login = async (req, res, next) => {
             console.log("Logged In Successfully")
 
             const existingToken = await Token.findOne({ _userId: userExists._id });
-            
+
             if (!existingToken) {
                 const newToken = new Token({ _userId: userExists._id, refreshTokens: refreshToken })
                 await newToken.save();
@@ -70,15 +62,22 @@ const login = async (req, res, next) => {
                 secure: process.env.NODE_ENV === "production" ? "Strict" : "none",
                 maxAge: 60 * 60 * 24 * 30 * 1000 // 30 days in milliseconds
             }).json({
-                "message": "Success logging in",
+                "successMessage": "Success logging in",
                 "accessToken": accessToken,
             })
         }
 
     } catch (error) {
         console.error("Error during login:", error);
+        
+        if(error.message === "No such user !!"){
+            return res.status(404).json({
+                "errorMessage":"No such user !!"
+            })
+        }
+
         return res.status(500).json({
-            error: "Internal Server Error",
+            errorMessage: "Internal Server Error",
         });
     }
 };

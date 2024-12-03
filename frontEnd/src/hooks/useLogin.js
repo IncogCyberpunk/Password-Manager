@@ -1,63 +1,86 @@
-import toast from "react-hot-toast"
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
-const useLogin =async (finalLoginData) => {
-  
+const useLogin = () => {
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
+  const login = async (finalLoginData) => {
+    setError(null);
+
     let fieldA;
-    let requestObject={}
+    let requestObject = {};
+
     try {
-        let email,username,password;
-    if(finalLoginData.hasOwnProperty("email")){
-        email=finalLoginData.email;
-        password=finalLoginData.password;
-        fieldA="email";
-        requestObject={...requestObject,email,password}
-    }
-    else if(finalLoginData.hasOwnProperty("username")){
-        username=finalLoginData.username;
-        password=finalLoginData.password;
-        fieldA="username"
-        requestObject=({...requestObject,username,password})
-    }
+      let email, username, password;
 
-    console.log("request object is ",requestObject)
+      if (finalLoginData.hasOwnProperty("email")) {
+        email = finalLoginData.email;
+        password = finalLoginData.password;
+        fieldA = "email";
+        requestObject = { email, password };
+      } else if (finalLoginData.hasOwnProperty("username")) {
+        username = finalLoginData.username;
+        password = finalLoginData.password;
+        fieldA = "username";
+        requestObject = { username, password };
+      }
 
-    // check if the fields are empty or not
-    if(fieldA==="email"){
-        checkField(email,password);
-    }
-    else {
-        checkField(username,password);
-    }
+      console.log("request object is", requestObject);
 
-    const data=await fetch("http://localhost:5000/api/auth/login",{
-        "method":"POST",
-        "headers":{
-            "Content-Type":"Application/json",
+      // Check if the fields are empty
+      if (fieldA === "email") {
+        checkField(email, password);
+      } else {
+        checkField(username, password);
+      }
 
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "Application/json",
         },
-        "credentials": "include",
-        "body": JSON.stringify(requestObject),
-    })
+        credentials: "include",
+        body: JSON.stringify(requestObject),
+      });
 
-    const response = await data.json();
-    console.log(response)
-    if(response.message==="Success logging in"){
-        localStorage.setItem("accessToken",response.accessToken)
-    }
+      const data = await response.json();
+      console.log("The response is", data);
 
-
+      if (data.successMessage) {
+        toast.success("Logged In Successfully");
+        localStorage.setItem("accessToken", data.accessToken);
+        setTimeout(() => {
+          navigate("/addcredentials");
+        }, 1000);
+      } else if (
+        data.errorMessage &&
+        data.errorMessage.toLowerCase().includes("no such user !!  please create a new account")
+      ) {
+        toast.error(data.errorMessage);
+        setError(data.errorMessage);
+      } else {
+        toast.error(data.errorMessage);
+        setError(data.errorMessage);
+      }
     } catch (error) {
-        console.log(`Error performing login`+error)    
+      console.error("Error during login:", error);
+      toast.error("An unexpected error occurred");
+      setError("An unexpected error occurred");
+    } finally {
     }
+  };
+
+  const checkField = (fieldA, password) => {
+    if (!fieldA || !password) {
+      const errorMsg = "Fields cannot be empty";
+      toast.error(errorMsg);
+      throw new Error(errorMsg);
+    }
+  };
+
+  return { login,  error };
 };
 
-function checkField(fieldA,password){
-    if(fieldA === "" || password ===""){
-        toast.error("Fields cannot be empty")
-        return
-    }
-
-}
-
-
-export default useLogin
+export default useLogin;

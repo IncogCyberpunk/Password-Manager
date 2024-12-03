@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import useLogin from "../../hooks/useLogin.js";
+import useSignup from "../../hooks/useSignup.js";
 import plusAnimated from "../../assets/animatedGIF/login_animated.gif";
 import eyeOpen from "../../assets/animatedGIF/eyeOpen.svg";
 import eyeCross from "../../assets/animatedGIF/eyeClose.svg";
@@ -10,20 +10,16 @@ import Radio from "../../components/Radio.jsx";
 
 export default function Signup() {
   const [eyeState, setEyeState] = useState(eyeCross);
-  const [signupData, setSignupData] = useState({});
-
-  let tooltip = (
-    <div className="tooltip absolute top-0 right-8 font-bold" data-tip="hello">
-      <button className="btn">
-        (eyeState === eyeCross ? "Show Password" : "Hide Password")
-      </button>
-    </div>
-  );
+  const [signupData, setSignupData] = useState({
+    fullName: "",
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const handleChange = (e) => {
-    console.log(`handlechange running`)
     const { name, value } = e.target;
-    console.log(value)
 
     setSignupData({ ...signupData, [name]: value }); // says to destructure the object and then update the key(name) with the value
   };
@@ -31,19 +27,22 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
     console.log(signupData);
-    // await useLogin(signupData);
+    await useSignup(signupData);
   };
 
   return (
     <>
       <form className=" w-fit mx-auto p-5 rounded-lg" onSubmit={handleSubmit}>
-        <div className="font-extrabold text-6xl flex justify-center my-5">
-          <span>SIGN-UP</span>
+        {/* Header Section */}
+        <div className="font-extrabold text-6xl flex justify-center ">
+          <span>
+            SIGN<span className="text-green-500">-</span>
+            <span className="text-purple-500">UP</span>
+          </span>
         </div>
 
-
+        {/* Form section */}
         <div className="flex flex-col ">
           {/* Full Name Input */}
           <div className="flex flex-col px-10">
@@ -60,13 +59,13 @@ export default function Signup() {
                 value={signupData.fullName}
                 placeholder="Enter your Full Name"
                 id="fullName"
-                className="inputField w-full "
+                className="inputField  w-full "
                 onChange={handleChange}
               />
             </div>
           </div>
 
-            {/* Email */}
+          {/* Email */}
           <div className="flex flex-col px-10">
             <label
               htmlFor="email"
@@ -77,7 +76,7 @@ export default function Signup() {
             <div className="flex gap-5 mb-3">
               <input
                 type="text"
-                name="email"  // name and value are used to link the input field with the state using setSignupData function
+                name="email" // name and value are used to link the input field with the state using setSignupData function
                 id="email" // id is used to link the label with the input field
                 value={signupData.email}
                 placeholder="Enter your email address"
@@ -87,7 +86,7 @@ export default function Signup() {
             </div>
           </div>
 
-            {/* username input */}
+          {/* username input */}
           <div className="flex flex-col px-10">
             <label
               htmlFor="username"
@@ -142,7 +141,7 @@ export default function Signup() {
                   alt=""
                 />
                 {/* Tooltip */}
-                <div className="absolute  right-0 hidden group-hover:block bg-gray-600 text-white text-md font-bold p-2 rounded-md shadow-lg">
+                <div className="absolute  right-0 hidden group-hover:block bg-gray-600 text-white text-md font-bold p-2 rounded-full px-3 shadow-lg">
                   {eyeState === eyeCross ? "Show Password" : "Hide Password"}
                 </div>
               </div>
@@ -193,22 +192,43 @@ export default function Signup() {
           {/* Gender input */}
           <div className="flex gap-10 mb-5 justify-start pl-14 mt-10 ">
             <div className="font-bold text-3xl ">
-                  <span>Gender <span className="text-green-600">-&gt;</span></span>
+              <span>
+                Gender <span className="text-green-600">-&gt;</span>
+              </span>
             </div>
             <div className="flex flex-col gap-2 ">
-            <Radio displayText="Male" radioId="maleRadio" radioName="gender" value="male" defaultChecked onChange={handleChange}/>
-            <Radio displayText="Female" radioId="femaleRadio" radioName="gender" value="female" onChange={handleChange}/>
-            <Radio displayText="Others" radioId="othersRadio" radioName="gender" value="others" onChange={handleChange}/>
+              <Radio
+                displayText="Male"
+                radioId="maleRadio"
+                radioName="gender"
+                value="male"
+                defaultChecked
+                onChange={handleChange}
+              />
+              <Radio
+                displayText="Female"
+                radioId="femaleRadio"
+                radioName="gender"
+                value="female"
+                onChange={handleChange}
+              />
+              <Radio
+                displayText="Others"
+                radioId="othersRadio"
+                radioName="gender"
+                value="others"
+                onChange={handleChange}
+              />
             </div>
           </div>
 
           {/* Don't have an account? */}
           <div className=" text-center mt-5 cursor-pointer ">
-            <a>
+            <Link to="/login">
               <span className="font-bold text-2xl underline mt-5 ">
                 Already Have an Account? Log In !
               </span>
-            </a>
+            </Link>
           </div>
           {/* Submit Section */}
           <div className="flex justify-center mt-8 flex- ">

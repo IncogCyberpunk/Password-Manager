@@ -1,7 +1,7 @@
 export default function Introduction() {
   return (
     <>
-    <div className="flex justify-center my-16 ">
+    <div className="flex justify-center mt-20 ">
       <div className="flex flex-col mx-auto px-10">
         <h1 className="text-6xl my-8 font-extrabold text-center">
         <span className="text-purple-500">&lt; </span>

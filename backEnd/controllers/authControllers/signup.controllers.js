@@ -1,13 +1,10 @@
 import User from "../../models/users.models.js";
 import Token from "../../models/token.models.js";
 import HashPassword from "../../utils/passwordUtils/hashPassword.js";
-import {generateAccessJWT, generateRefreshJWT} from "../../utils/jwtTokens/generateJWT.js";
-import authenticateJWT from "../../middlewares/authenticateJWT.js";
 
 const signUp = async (req, res) => {
     try {
         let { fullName, username, password, confirmPassword, email, gender } = req.body;
-
 
         fullName = fullName.trim();
         username = username.trim();
@@ -21,11 +18,11 @@ const signUp = async (req, res) => {
         }
 
 
-        let existingUser = await User.findOne({ username, email });
+        let existingUser = await User.findOne({ email }) || await User.findOne({ email });
 
         if (existingUser) {
             return res.status(400).json({
-                "error": "User already exists !! Please login "
+                "errorMessage": "User already exists !! Please login "
             })
         }
         
@@ -41,7 +38,11 @@ const signUp = async (req, res) => {
             await newUser.save();
             console.log(`Signup successful and user added to the database`)
             
+            //
+            //
             // CREATE TOKENS ONLY AFTER LOGIN, AS THEY ARE USED FOR AUTHENTICATION, IF NOT CAN BE EXPLOITED BY HACKERS
+            //
+            //
             // let accessToken = generateAccessJWT(newUser);
             // let refreshToken = generateRefreshJWT(newUser);
             // const newRefreshToken= new Token({
@@ -64,14 +65,14 @@ const signUp = async (req, res) => {
         } catch (error) {
             console.log(error)
             return res.status(401).json({
-                "message": "Error generating tokens"
+                "error": "Error generating tokens"
             })
         }
     } catch (error) {
         console.log(`Error was occured `)
         console.log(error)
         return res.status(400).json({
-            "message": "Error performing signup"
+            "error": "Error performing signup"
         })
     }
 }

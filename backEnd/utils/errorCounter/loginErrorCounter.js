@@ -1,6 +1,6 @@
 let count =0;
 
-export default function LoginErrorCounter(bool=false){
+export default function LoginErrorCounter(bool=false,res){
     if(bool === true){
         count++;
     }

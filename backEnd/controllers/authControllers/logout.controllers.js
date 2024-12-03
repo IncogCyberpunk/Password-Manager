@@ -2,13 +2,6 @@ import Token from "../../models/token.models.js"
 
 const logout = async (req, res) => {
     try {
-        //
-        //
-        //
-        // USE REACT TO PROVIDE THE ._id OF THE CLIENT AS OTHERWISE IT CAN'T BE GIVEN TO THE LOGOUT ROUTE
-        //
-        //
-        //
         const { _userId } = req.body;
         const { refreshToken } = req.cookies;
 
@@ -27,15 +20,16 @@ const logout = async (req, res) => {
                 // sameSite if enabled in development creates problems during developing
                 sameSite: "Strict",
                 secure: process.env.NODE_ENV === "production" ,
-            }).json({ message: "Logged Out Successfully" })
+            }).json({ successMessage: "Logged Out Successfully" })
         } catch (error) {
             console.log("Error removing the refreshToken during logout")
             console.log(error)
+            return;
         }
     } catch (error) {
         console.log(`Error logging out` + error)
         res.status(500).json({
-            "message": "Internal Server Error !! Log-out failed"
+            "errorMessage": "Internal Server Error !! Log-out failed"
         })
     }
 }

@@ -6,7 +6,8 @@ import cors from "cors"
 
 import connectToMongoDB from "./db/connectToMongoDb.js";
 
-import authRoutes from "./routes/auth.routes.js"
+import authRoutes from "./routes/authRoutes/auth.routes.js"
+import credentialsRoutes from "./routes/credentialsRoutes/credentials.routes.js"
 
 const app =express();
 
@@ -45,9 +46,12 @@ const corsOptions={
 }
 
 // CUSTOM MIDDLEWARES FOR ROUTES
+
 //cors setup only needed during development
 app.use("/api/auth",cors(corsOptions),authRoutes);
 
+// routes for managind the details stored using password manager i.e. password of different websites
+app.use("/api/storage",cors(corsOptions),credentialsRoutes)
 
 app.get("/",(req,res) => {
     res.send("Hello World");
