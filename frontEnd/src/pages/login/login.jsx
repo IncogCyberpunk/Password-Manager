@@ -1,4 +1,10 @@
-import { useEffect, useState } from "react";
+/*
+STATE UPDATE MECHANISM IN REACT:
+https://chatgpt.com/share/675191a1-834c-800a-8c44-1846cead1f02
+*/
+
+
+import { useRef, useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Navbar from "../../components/Navbar.jsx";
@@ -12,10 +18,12 @@ import eyeCross from "../../assets/animatedGIF/eyeClose.svg";
 
 export default function Login() {
   const { login } = useLogin();
+  const siteLoaded=useRef(true);
 
   const [eyeState, setEyeState] = useState(eyeCross);
   const [whichRadio, setwhichRadio] = useState("username");
   const [finalLoginData, setFinalLoginData] = useState({});
+  const [clickStatus, setClickStatus] = useState(false)
 
   let [loginData, setLoginData] = useState({
     email: "",
@@ -25,30 +33,34 @@ export default function Login() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setLoginData({ ...loginData, [name]: value }); // says to destructure the object and then update the key(name) with the value
+    setLoginData({ ...loginData, [name]: value });
   };
 
+  // STATE UPDATES ARE ASYNCHRONOUS IN REACT AND ARE BATCHED, SO ARE NOT IMMEDIATELY REFLECTED AND UPDATED IN THE NEXT RENDER CYCLE
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    setClickStatus(true);
     console.log(`loginData is `, loginData);
 
-    setFinalLoginData({
+    // Set finalLoginData first
+    const finalData = {
       password: loginData.password,
-      //spread operator takes the object eg: email:loginData.email and then spreads it into the object (saves it as a key value pair) into the new object
       ...(whichRadio === "email"
         ? { email: loginData.email }
         : { username: loginData.username }),
-    });
-  };
+    };
 
-  // finalLoginData state updates asynchronously, so useEffect is used to perform login only after it is updated properly
-  useEffect( () => {
-    (async () => {
-      console.log(`finalLoginData is `, finalLoginData);
-      await login(finalLoginData);
-    })();
+    // this state update (asynchronous process) is scheduled for next render cycle, so it will only be updated after all the sycnhronous code in this function is executed
+    setFinalLoginData(finalData);
+  };
+  useEffect(() => {
+    if (clickStatus) {
+      console.log("finalLoginData is ", finalLoginData);
+      login(finalLoginData);
+    }
   }, [finalLoginData]);
+
 
   return (
     <>
@@ -96,7 +108,6 @@ export default function Login() {
                     <div className="flex gap-3">
                       <input
                         type="radio"
-                        // creating two radio btns with same `name` attribute will make them belong to same group, so only one can be clicked at a time
                         name="loginType"
                         id="emailRadio"
                         className="radio focus:border-none text-3xl cursor-pointer"
@@ -147,8 +158,6 @@ export default function Login() {
                     className="inputField  "
                     onChange={handleChange}
                   />
-                  {/* this `group` class allows to group elements together and apply styles to child component based on the behavior of parent element; `group-` can then be used to apply styles in the child elements according to state  of parent element */}
-                  {/* here this helped us to  get the tooltip to show up when the eye icon is hovered */}
                   <div className="group">
                     <img
                       onClick={() => {
@@ -162,7 +171,6 @@ export default function Login() {
                       className="absolute w-10 right-4 top-4"
                       alt=""
                     />
-                    {/* Tooltip */}
                     <div className="absolute right-1 hidden group-hover:block bg-gray-600 text-white text-md font-bold p-2 rounded-full px-3 shadow-lg">
                       {eyeState === eyeCross
                         ? "Show Password"
@@ -172,15 +180,13 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Don't have an account? */}
-              <div className=" text-center mt-5 cursor-pointer ">
+              <div className="text-center mt-5 cursor-pointer ">
                 <Link to="/signup">
                   <span className="font-bold text-2xl underline mt-5 ">
                     Don't Have an Account? Sign Up !
                   </span>
                 </Link>
               </div>
-              {/* Submit Section */}
               <div className="flex justify-center mt-8 flex- ">
                 <button
                   type="submit"

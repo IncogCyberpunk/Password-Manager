@@ -11,11 +11,10 @@ import Navbar from "../../components/Navbar";
 import Background from "../../components/Background";
 import Vault from "../vault/vault";
 
-
 export default function AddCredentials() {
   const [eyeState, setEyeState] = useState(eyeCross);
 
-  const{ storeCredentials} = useStoreCredentials();
+  const { storeCredentials } = useStoreCredentials();
 
   // this initialization is important so as to make the inputs controlled by a state and not controlled by DOM
   const [credentials, setCredentials] = useState({
@@ -32,9 +31,9 @@ export default function AddCredentials() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const storeResponse=await storeCredentials(credentials);
-    console.log(`storeResponse is `,storeResponse)
+
+    const storeResponse = await storeCredentials(credentials);
+    console.log(`storeResponse is `, storeResponse);
   };
   return (
     <>

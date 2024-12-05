@@ -2,7 +2,6 @@ import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
-  useNavigate,
 } from "react-router-dom";
 import { useAccessStatusContext } from "./context/accessStatus.context.jsx";
 

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import { useAccessStatusContext } from "../context/accessStatus.context";
 
-const loginChannel= new BroadcastChannel("loginChannel")
 
 const useLogin = () => {
   const {setAccessStatus} = useAccessStatusContext();
@@ -61,9 +60,6 @@ const useLogin = () => {
           toast.success("Redirecting to Add Credentials")
           navigate("/addcredentials")
         }, 750);
-  
-        loginChannel.postMessage({loginStatus:true})
-
       } else if (data.errorMessage && data.errorMessage.toLowerCase().includes("no such user")) {
         toast.error(data.errorMessage);
         setError(data.errorMessage);
