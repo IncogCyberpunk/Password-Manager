@@ -39,22 +39,30 @@ const port=process.env.PORT || 5500
 
 // SETTING UP CORS FOR ACCESS FROM FRONTEND DURING DEVELOPMENT
 // app.use(cors())                  // if u want whole app to accept requests made from other origin(different domain) 
-const corsOptions={
-    origin:"http://localhost:3000",
-    methods: ['GET',"POST","PUT","DELETE"],
-    credentials:true, // allows cookies and credentials
-}
+// const corsOptions={
+//     origin:"http://localhost:3000",
+//     methods: ['GET',"POST","PUT","DELETE"],
+//     credentials:true, // allows cookies and credentials
+// }
+
+app.use(express.static(path.join("../frontEnd/dist")))
 
 // CUSTOM MIDDLEWARES FOR ROUTES
 
 //cors setup only needed during development
-app.use("/api/auth",cors(corsOptions),authRoutes);
+// app.use("/api/auth",cors(corsOptions),authRoutes);
+app.use("/api/auth",authRoutes);
 
 // routes for managind the details stored using password manager i.e. password of different websites
-app.use("/api/storage",cors(corsOptions),credentialsRoutes)
+// app.use("/api/storage",cors(corsOptions),credentialsRoutes)
+app.use("/api/storage",credentialsRoutes)
 
 app.get("/",(req,res) => {
     res.send("Hello World");
+})
+
+app.get("*",(req,res) => {
+    res.sendFile(path.join(__dirname,"../frontEnd/dist/index.html"))
 })
 
 app.listen(port,() => {
