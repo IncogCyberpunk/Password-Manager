@@ -35,7 +35,7 @@ export default function Vault() {
   // useEffect's primary purpose it to listen for updates to states , so here used to listen for updates to submitStatus from the broadcastChannel
   useEffect(() => {
 
-    // we are adding a event listener to the broadcastChannel to listen for messages
+    // this method automatically adds an event listener to the broadcastChannel and listens for messages
     broadcastChannel.onmessage = (e)=>{
       const {submitStatus}= e.data;
       console.log(`message received : `,e)
@@ -135,7 +135,6 @@ export default function Vault() {
             </span>
           </div>
         </header>
-
         <main>
           {retrievedCredentials === null ? noCredentialsContent  : credentialsContent}
         </main>

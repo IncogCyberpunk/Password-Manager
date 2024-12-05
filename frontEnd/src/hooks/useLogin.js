@@ -2,9 +2,14 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
+import { useAccessStatusContext } from "../context/accessStatus.context";
+
+const loginChannel= new BroadcastChannel("loginChannel")
+
 const useLogin = () => {
-  const navigate = useNavigate();
+  const {setAccessStatus} = useAccessStatusContext();
   const [error, setError] = useState(null);
+  const navigate=useNavigate();
 
   const login = async (finalLoginData) => {
     setError(null);
@@ -51,13 +56,15 @@ const useLogin = () => {
       if (data.successMessage) {
         toast.success("Logged In Successfully");
         localStorage.setItem("accessToken", data.accessToken);
-        setTimeout(() => {
-          navigate("/addcredentials");
-        }, 1000);
-      } else if (
-        data.errorMessage &&
-        data.errorMessage.toLowerCase().includes("no such user !!  please create a new account")
-      ) {
+        setAccessStatus(true)      
+        setTimeout(() =>{
+          toast.success("Redirecting to Add Credentials")
+          navigate("/addcredentials")
+        }, 750);
+  
+        loginChannel.postMessage({loginStatus:true})
+
+      } else if (data.errorMessage && data.errorMessage.toLowerCase().includes("no such user")) {
         toast.error(data.errorMessage);
         setError(data.errorMessage);
       } else {
@@ -65,18 +72,21 @@ const useLogin = () => {
         setError(data.errorMessage);
       }
     } catch (error) {
-      console.error("Error during login:", error);
-      toast.error("An unexpected error occurred");
-      setError("An unexpected error occurred");
-    } finally {
+      if(error.message){
+        console.error("Error during login:", error);
+      }
+      else{
+        toast.error("An unexpected error occurred");
+        setError("An unexpected error occurred");
+      }
     }
   };
 
-  const checkField = (fieldA, password) => {
+  function checkField(fieldA, password){
     if (!fieldA || !password) {
       const errorMsg = "Fields cannot be empty";
       toast.error(errorMsg);
-      throw new Error(errorMsg);
+      throw  Error(errorMsg);
     }
   };
 

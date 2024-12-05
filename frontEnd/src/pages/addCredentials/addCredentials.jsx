@@ -6,7 +6,7 @@ import eyeCross from "../../assets/animatedGIF/eyeClose.svg";
 import rightArrow from "../../assets/animatedGIF/right_arrow.gif";
 import addImage from "../../assets/animatedGIF/pages.gif";
 import useStoreCredentials from "../../hooks/useStoreCredentials";
-import { useUserIdContext } from "../../context/userId.context";
+
 import Navbar from "../../components/Navbar";
 import Background from "../../components/Background";
 import Vault from "../vault/vault";
@@ -32,10 +32,7 @@ export default function AddCredentials() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(credentials);
-
-    console.log(credentials);
+    
     const storeResponse=await storeCredentials(credentials);
     console.log(`storeResponse is `,storeResponse)
   };

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import Logout from "../pages/logout/logout"
 import githubLogo from "../assets/images/github.png"
@@ -15,14 +15,15 @@ export default function Navbar() {
         </div>
         <ul>
           <li className="flex gap-10 font-semibold text-2xl  items-center">
-            <Link to="/" className="hover:font-extrabold">Home</Link>
-            <Link to="/addcredentials" className="hover:font-extrabold">Add Credentials</Link>
-            <Link to="/vault" className="hover:font-extrabold">My Vault</Link>
+            <NavLink to="/" className="hover:font-extrabold">Home</NavLink>
+            <NavLink to="/addcredentials" className="hover:font-extrabold">Add Credentials</NavLink>
+            <NavLink to="/vault" className="hover:font-extrabold">My Vault</NavLink>
             <a href="https://github.com/IncogCyberpunk/Password-Manager" className="hover:font-extrabold flex items-center gap-3 ">
                 <img src={githubLogo} width="48px" alt="Github Logo" className="rounded-full relative bottom-1" /> 
                 <span>GitHub</span>
             </a>
-            <Link to="/logout" className="hover:font-extrabold"> <Logout/> </Link>
+            { !(window.location.href.includes("login") || window.location.href.includes("signup")) ? 
+            <NavLink to="/logout" className="hover:font-extrabold"> <Logout/> </NavLink> : null}
           </li>
         </ul>
       </nav>

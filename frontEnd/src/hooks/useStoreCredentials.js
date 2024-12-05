@@ -1,20 +1,22 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserIdContext } from "../context/userId.context";
-import { useSubmitStatusContext } from "../context/submitStatus.context";
 import toast from "react-hot-toast";
 import validateEmail from "../utilities/validateEmail.js";
+
+import { useSubmitStatusContext } from "../context/submitStatus.context";
+import { useAccessStatusContext } from "../context/accessStatus.context";
+import { useActionStatusContext } from "../context/actionStatus.context";
 
 
 
 // creating a broadcast channel using BroadCast WEB API to share the `submitStatus` across tabs/windows
-const broadcastChannel=new BroadcastChannel("submitStatusChannel")
+const broadcastChannel = new BroadcastChannel("submitStatusChannel")
 
 export default function useStoreCredentials() {
-  const { submitStatus,setSubmitStatus } = useSubmitStatusContext();
-  
-  const _userId = useUserIdContext();
-  const navigate=useNavigate();
+  const { setActionStatus } = useActionStatusContext();
+  const { submitStatus, setSubmitStatus } = useSubmitStatusContext();
+
+  const { userId: _userId } = useAccessStatusContext();
+  const navigate = useNavigate();
 
   const storeCredentials = async (credentials) => {
     const { websiteName, loginEmail, loginPassword } = credentials;
@@ -42,21 +44,22 @@ export default function useStoreCredentials() {
         },
         body: JSON.stringify(finalObject),
       });
-      
+
       const response = await request.json();
       console.log(response)
       if (response.successMessage) {
         toast.success("Successfully added credentials to the vault.");
         setSubmitStatus(true);
-        
-        // broadcast the updated submitStatus
-        broadcastChannel.postMessage({submitStatus:true})
+
+        broadcastChannel.postMessage({ submitStatus: true })
         console.log('Broadcasting submitStatus update');
-        
+
+        setActionStatus(true);
+
         console.log(`the submit status is ${submitStatus}`)
         return Promise.resolve(response);
       }
-      
+
       else if (response.errorMessage.toLowerCase().includes(("token expired") || ("you are not a valid user"))) {
         toast.error(response.errorMessage);
         setTimeout(() => {
@@ -76,5 +79,5 @@ export default function useStoreCredentials() {
     }
   };
 
-  return {storeCredentials,submitStatus,setSubmitStatus};
+  return { storeCredentials, submitStatus, setSubmitStatus };
 }

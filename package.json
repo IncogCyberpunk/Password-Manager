@@ -2,6 +2,8 @@
   "dependencies": {
     "concurrently": "^9.1.0",
     "daisyui": "^4.12.14",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "supports-color": "^7.2.0"
   },
   "type": "module"

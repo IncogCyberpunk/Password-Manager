@@ -9,14 +9,14 @@ const checkPassword = async (pass, hashPass,res) => {
         else
         console.log("Incorrect Password")
             return res.status(400).json({
-                "message": "Incorrect password"
+                "errorMessage": "Incorrect password"
             })
     } catch (error) {
         console.log("Error checking the password")
         console.log(error)
 
         return res.status(500).json({
-            "message":"An error occured while checking the password"
+            "errorMessage":"An error occured while checking the password"
         })
     }
 };

@@ -21,7 +21,7 @@ const login = async (req, res, next) => {
                 }
                 userExists = await User.findOne({ username });
             } catch (error) {
-                console.log("Email cannot be a username")
+                console.log("Email cannot be a username",error)
                 return res.status(400).json({ "message": "Please enter a valid username" })
             }
         } else if (email?.trim()) {
@@ -29,12 +29,14 @@ const login = async (req, res, next) => {
         }
 
         if (!userExists) {
-            ErrorCounter(true, res);
-            throw Error("No such user !!")
+            // ErrorCounter(true, res);
+            return res.status(404).json({
+                "errorMessage":"No such user !!"
+            })
         }
 
         const isPasswordValid = await checkPassword(password, userExists.password, res);
-        if (isPasswordValid) {
+        if(isPasswordValid) {
             const accessToken = generateAccessJWT(userExists);
             const refreshToken = generateRefreshJWT(userExists);
             console.log("Logged In Successfully")
@@ -66,15 +68,8 @@ const login = async (req, res, next) => {
                 "accessToken": accessToken,
             })
         }
-
     } catch (error) {
         console.error("Error during login:", error);
-        
-        if(error.message === "No such user !!"){
-            return res.status(404).json({
-                "errorMessage":"No such user !!"
-            })
-        }
 
         return res.status(500).json({
             errorMessage: "Internal Server Error",
