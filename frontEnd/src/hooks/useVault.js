@@ -13,7 +13,8 @@ export default function useVault() {
 
   const retrieveCredentials = async () => {
     try {
-      const data = await fetch("http://localhost:5000/api/storage/retrievecredentials", {
+      // const data = await fetch("http://localhost:5000/api/storage/retrievecredentials", {
+      const data = await fetch("/api/storage/retrievecredentials", {
         method: "POST",
         credentials: "include",
         headers: {

@@ -6,7 +6,8 @@ export default function RenewToken() {
 
   const handleTokenRenewal = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/refresh-token", {
+      // const response = await fetch("http:/localhost:5000/api/auth/refresh-token", {
+      const response = await fetch("/api/auth/refresh-token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

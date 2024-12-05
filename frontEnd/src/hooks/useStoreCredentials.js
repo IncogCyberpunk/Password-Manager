@@ -35,7 +35,8 @@ export default function useStoreCredentials() {
     console.log(`The final object is:`, finalObject)
 
     try {
-      const request = await fetch("http://localhost:5000/api/storage/storecredentials", {
+      // const request = await fetch("http://localhost:5000/api/storage/storecredentials", {
+      const request = await fetch("/api/storage/storecredentials", {
         method: "POST",
         credentials: "include",
         headers: {
