@@ -67,10 +67,7 @@ export default function Login() {
       <Navbar />
       <main className="z-10">
         <Background>
-          <form
-            className=" w-fit mx-auto p-5 rounded-lg"
-            onSubmit={handleSubmit}
-          >
+          <form className=" w-fit mx-auto p-5 rounded-lg" onSubmit={handleSubmit} >
             <Introduction />
             <div className="font-extrabold text-6xl flex justify-center my-5">
               <span>

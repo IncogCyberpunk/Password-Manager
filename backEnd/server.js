@@ -70,6 +70,3 @@ app.listen(port,() => {
     console.log(`Server running at port ${port}`);
 })
 
-
-// need to create refresh token and access token frontend
-// refresh token backend and refresh mechanism

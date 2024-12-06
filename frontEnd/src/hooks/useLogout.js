@@ -12,8 +12,8 @@ export default function useLogout() {
     const { setActionStatus } = useActionStatusContext();
     const performLogout = async () => {
         try {
-            // const data = await fetch("http://localhost:5000/api/auth/logout", {
-            const data = await fetch("/api/auth/logout", {
+            const data = await fetch("http://localhost:5000/api/auth/logout", {
+            // const data = await fetch("/api/auth/logout", {
                 method: "POST",
                 credentials: "include",
                 headers: {
