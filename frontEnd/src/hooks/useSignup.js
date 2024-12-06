@@ -14,8 +14,8 @@ const useSignup = async (signupData) => {
         return;
 
     try {
-        const data = await fetch("http://localhost:5000/api/auth/signup", {
-        // const data = await fetch("/api/auth/signup", {
+        // const data = await fetch("http://localhost:5000/api/auth/signup", {
+        const data = await fetch("/api/auth/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "Application/json"
