@@ -3,7 +3,7 @@
 export default function Radio(props){
     return (
         <>
-            <div className="flex gap-3 ">
+            <div className="flex gap-1 sm:gap-3 ">
                   <input
                     type="radio"
                     name={props.radioName}
@@ -15,7 +15,7 @@ export default function Radio(props){
                   />
                   <label
                     htmlFor={props.radioId}
-                    className="font-semibold text-3xl cursor-pointer"
+                    className="font-semibold text-xl sm:text-3xl cursor-pointer"
                   >
                     {props.displayText}
                   </label>

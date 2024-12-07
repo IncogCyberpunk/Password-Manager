@@ -6,7 +6,6 @@ import Background from "../../components/Background.jsx";
 import Introduction from "../../components/Introduction.jsx";
 
 import useSignup from "../../hooks/useSignup.js";
-import plusAnimated from "../../assets/animatedGIF/login_animated.gif";
 import eyeOpen from "../../assets/animatedGIF/eyeOpen.svg";
 import eyeCross from "../../assets/animatedGIF/eyeClose.svg";
 
@@ -43,10 +42,10 @@ export default function Signup() {
           <form
             className=" w-fit mx-auto p-5 rounded-lg"
             onSubmit={handleSubmit}
-            >
-            <Introduction/>
+          >
+            <Introduction />
             {/* Header Section */}
-            <div className="font-extrabold text-6xl flex justify-center ">
+            <div className="font-extrabold mt-5 mb-3 sm:mt-0 underline text-5xl md:text-6xl flex justify-center ">
               <span>
                 SIGN<span className="text-green-500">-</span>
                 <span className="text-purple-500">UP</span>
@@ -54,90 +53,101 @@ export default function Signup() {
             </div>
 
             {/* Form section */}
-            <div className="flex flex-col ">
-              {/* Full Name Input */}
-              <div className="flex flex-col px-10">
-                <label
-                  htmlFor="fullName"
-                  className="pl-5 font-bold text-xl my-5 w-fit "
-                >
-                  <span className="text-3xl">Full Name</span>
-                </label>
-                <div className="flex gap-5 mb-3">
+            <div className="flex pt-3 flex-col gap-2 items-center">
+              {/* Full Name  */}
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col pl-3 xl:flex-row  ">
+                  <label
+                    htmlFor="fullName"
+                    className="pl- font-bold text-xl w-fit "
+                  >
+                    <span className="text-xl sm:text-2xl xl:text-3xl">
+                      Full Name :
+                    </span>
+                  </label>
+                </div>
+
+                {/* Input Field */}
+                <div className="w-full mb-3 ">
                   <input
                     type="text"
-                    name="fullName"
-                    value={signupData.fullName}
-                    placeholder="Enter your Full Name"
+                    placeholder="Enter your full name"
                     id="fullName"
-                    className="inputField  w-full "
+                    className="inputField placeholder:text-md py-1 pl-3 pr-16"
                     onChange={handleChange}
                   />
                 </div>
               </div>
 
               {/* Email */}
-              <div className="flex flex-col px-10">
-                <label
-                  htmlFor="email"
-                  className="pl-5 font-bold text-xl my-5 w-fit "
-                >
-                  <span className="text-3xl">Email Address</span>
-                </label>
-                <div className="flex gap-5 mb-3">
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col pl-3 xl:flex-row  ">
+                  <label
+                    htmlFor="email"
+                    className="pl- font-bold text-xl w-fit "
+                  >
+                    <span className="text-xl sm:text-2xl xl:text-3xl">
+                      Email Address:
+                    </span>
+                  </label>
+                </div>
+
+                {/* Input Field */}
+                <div className="w-full mb-3 ">
                   <input
                     type="text"
-                    name="email" // name and value are used to link the input field with the state using setSignupData function
-                    id="email" // id is used to link the label with the input field
-                    value={signupData.email}
                     placeholder="Enter your email address"
-                    className="inputField w-full "
+                    id="email"
+                    className="inputField placeholder:text-md py-1 pl-3 pr-16"
                     onChange={handleChange}
                   />
                 </div>
               </div>
 
-              {/* username input */}
-              <div className="flex flex-col px-10">
-                <label
-                  htmlFor="username"
-                  className="pl-5 font-bold text-xl my-5 w-fit "
-                >
-                  <span className="text-3xl">Username</span>
-                </label>
-                <div className="flex gap-5 mb-3">
+              {/* Email */}
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col pl-3 xl:flex-row  ">
+                  <label
+                    htmlFor="username"
+                    className="pl- font-bold text-xl w-fit "
+                  >
+                    <span className="text-xl sm:text-2xl xl:text-3xl">
+                      Username:
+                    </span>
+                  </label>
+                </div>
+
+                {/* Input Field */}
+                <div className="w-full mb-3 ">
                   <input
                     type="text"
-                    name="username"
-                    value={signupData.username}
-                    placeholder="Create a unique username"
+                    placeholder="Enter a unique username"
                     id="username"
-                    className="inputField w-full "
+                    className="inputField placeholder:text-md py-1 pl-3 pr-16"
                     onChange={handleChange}
                   />
                 </div>
               </div>
 
-              {/* Password Input */}
-              <div className="flex flex-col px-10">
+              {/* Password */}
+              <div className="flex flex-col gap-2 items-center ">
                 <label
                   htmlFor="password"
-                  className="px-5 font-bold text-3xl my-5 w-fit"
+                  className="pl-3 font-bold text-xl w-fit "
                 >
-                  Password
+                  <span className="text-xl sm:text-2xl xl:text-3xl">
+                    Password
+                  </span>
                 </label>
-                <div className="relative ">
+                <div className="w-full group relative mb-3">
                   <input
                     type={eyeState === eyeCross ? "password" : "text"}
                     name="password"
-                    value={signupData.password}
+                    placeholder="Create a strong password"
                     id="password"
-                    placeholder="Enter your password"
-                    className="inputField w-full"
+                    className="inputField placeholder:text-md py-1 pl-3 pr-16"
                     onChange={handleChange}
                   />
-                  {/* this `group` class allows to group elements together and apply styles to child component based on the behavior of parent element; `group-` can then be used to apply styles in the child elements according to state  of parent element */}
-                  {/* here this helped us to  get the tooltip to show up when the eye icon is hovered */}
                   <div className="group">
                     <img
                       onClick={() => {
@@ -148,11 +158,10 @@ export default function Signup() {
                         }
                       }}
                       src={eyeState}
-                      className="absolute w-10 right-9 top-4 "
+                      className="absolute w-6 right-4 top-1.5 sm:right-4 sm:top-4"
                       alt=""
                     />
-                    {/* Tooltip */}
-                    <div className="absolute  right-0 hidden group-hover:block bg-gray-600 text-white text-md font-bold p-2 rounded-full px-3 shadow-lg">
+                    <div className="absolute -right-5 hidden group-hover:block bg-gray-600 text-white text-sm sm:text-md font-semibold sm:font-bold p-1 rounded-full px-3 shadow-lg">
                       {eyeState === eyeCross
                         ? "Show Password"
                         : "Hide Password"}
@@ -161,26 +170,25 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/*Confirm Password Input */}
-              <div className="flex flex-col px-10">
+              {/*Confirm Password */}
+              <div className="flex flex-col gap-2 items-center ">
                 <label
-                  htmlFor="confirmPassword"
-                  className="px-5 font-bold text-3xl my-5 w-fit"
+                  htmlFor="password"
+                  className="pl-3 font-bold text-xl w-fit "
                 >
-                  Confirm Password
+                  <span className="text-xl sm:text-2xl xl:text-3xl">
+                    Password
+                  </span>
                 </label>
-                <div className="relative ">
+                <div className="w-full group relative mb-3">
                   <input
                     type={eyeState === eyeCross ? "password" : "text"}
-                    name="confirmPassword"
-                    value={signupData.confirmPassword}
-                    id="confirmPassword"
-                    placeholder="Enter your password again"
-                    className="inputField w-full"
+                    name="password"
+                    placeholder="Enter the password again"
+                    id="password"
+                    className="inputField placeholder:text-md py-1 pl-3 pr-16"
                     onChange={handleChange}
                   />
-                  {/* this `group` class allows to group elements together and apply styles to child component based on the behavior of parent element; `group-` can then be used to apply styles in the child elements according to state  of parent element */}
-                  {/* here this helped us to  get the tooltip to show up when the eye icon is hovered */}
                   <div className="group">
                     <img
                       onClick={() => {
@@ -191,11 +199,10 @@ export default function Signup() {
                         }
                       }}
                       src={eyeState}
-                      className="absolute w-10 right-9 top-4 "
+                      className="absolute w-6 right-4 top-1.5 sm:right-4 sm:top-4"
                       alt=""
                     />
-                    {/* Tooltip */}
-                    <div className="absolute  right-0 hidden group-hover:block bg-gray-600 text-white text-md font-bold p-2 rounded-md shadow-lg">
+                    <div className="absolute -right-5 hidden group-hover:block bg-gray-600 text-white text-sm sm:text-md font-semibold sm:font-bold p-1 rounded-full px-3 shadow-lg">
                       {eyeState === eyeCross
                         ? "Show Password"
                         : "Hide Password"}
@@ -205,10 +212,10 @@ export default function Signup() {
               </div>
 
               {/* Gender input */}
-              <div className="flex gap-10 mb-5 justify-start pl-14 mt-10 ">
-                <div className="font-bold text-3xl ">
+              <div className="flex gap-4 sm:gap-10 mb-2 sm:mb-5 justify-start mt-3 sm:mt-10 ">
+                <div className="font-bold text-2xl sm:text-3xl ">
                   <span>
-                    Gender <span className="text-green-600">-&gt;</span>
+                    Gender <span className="text-green-600 text-xl sm:text-2xl">-&gt;</span>
                   </span>
                 </div>
                 <div className="flex flex-col gap-2 ">
@@ -238,21 +245,31 @@ export default function Signup() {
               </div>
 
               {/* Don't have an account? */}
-              <div className=" text-center mt-5 cursor-pointer ">
+              <div className=" text-center md:mt-3 cursor-pointer ">
                 <Link to="/login">
-                  <span className="font-bold text-2xl underline mt-5 ">
+                  <span
+                    className="font-semibold text-xl sm:text-2xl underline
+                   mt-5 "
+                  >
                     Already Have an Account? Log In !
                   </span>
                 </Link>
               </div>
+
               {/* Submit Section */}
-              <div className="flex justify-center mt-8 flex- ">
+              <div className="flex justify-center mt-8 ">
                 <button
                   type="submit"
-                  className="border-x-4 border-y-2 border-gray-600  btnField font-medium text-3xl flex gap-4 items-center"
+                  className="border-x-4 border-y-2 p-3 pr-4 border-fuchsia-600  btnField font-bold text-3xl flex gap-2 items-center"
                 >
-                  <img src={plusAnimated} className="w-16" alt="Plus button" />
-                  <span>Sign Up</span>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/nfgmqqvs.json"
+                    trigger="loop"
+                    delay="3000"
+                    style={{ width: "45px", height: "45px" }}
+                    class=""
+                  ></lord-icon>
+                  <span className="text-pink-700 ">Sign Up</span>
                 </button>
               </div>
             </div>

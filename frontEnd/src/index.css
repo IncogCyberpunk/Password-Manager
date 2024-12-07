@@ -4,10 +4,10 @@
 
 @layer utilities{
     .inputField{
-        @apply rounded-full pl-8 placeholder:text-2xl text-2xl  pr-36  py-5 border-2  border-gray-500 focus:ring-green-400 focus:ring-4 focus:outline-none focus:border-transparent;
-        width: 40rem;
+        @apply rounded-full  border-2  border-gray-500 focus:ring-green-400 focus:ring-4 focus:outline-none focus:border-transparent;
+        
     }
     .btnField{
-        @apply  px-14 py-4 rounded-full  bg-purple-200 active:bg-purple-300
+        @apply  rounded-full  bg-purple-200 active:bg-purple-300 border-fuchsia-600 text-pink-700
     }
 }

@@ -3,8 +3,7 @@ STATE UPDATE MECHANISM IN REACT:
 https://chatgpt.com/share/675191a1-834c-800a-8c44-1846cead1f02
 */
 
-
-import { useRef, useState,useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Navbar from "../../components/Navbar.jsx";
@@ -18,12 +17,12 @@ import eyeCross from "../../assets/animatedGIF/eyeClose.svg";
 
 export default function Login() {
   const { login } = useLogin();
-  const siteLoaded=useRef(true);
+  const radioClick = useRef(null);
 
   const [eyeState, setEyeState] = useState(eyeCross);
   const [whichRadio, setwhichRadio] = useState("username");
   const [finalLoginData, setFinalLoginData] = useState({});
-  const [clickStatus, setClickStatus] = useState(false)
+  const [clickStatus, setClickStatus] = useState(false);
 
   let [loginData, setLoginData] = useState({
     email: "",
@@ -37,7 +36,7 @@ export default function Login() {
   };
 
   // STATE UPDATES ARE ASYNCHRONOUS IN REACT AND ARE BATCHED, SO ARE NOT IMMEDIATELY REFLECTED AND UPDATED IN THE NEXT RENDER CYCLE
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setClickStatus(true);
@@ -61,58 +60,67 @@ export default function Login() {
     }
   }, [finalLoginData]);
 
-
   return (
-    <>
+    <div className="max-w-[468px] sm:max-w-screen-sm">
       <Navbar />
       <main className="z-10">
         <Background>
-          <form className=" w-fit mx-auto p-5 rounded-lg" onSubmit={handleSubmit} >
+          <form className="p-5 rounded-lg z-50" onSubmit={handleSubmit} onLoad={()=> radioClick.current.focus()}>
             <Introduction />
-            <div className="font-extrabold text-6xl flex justify-center my-5">
-              <span>
-                LOG <span className="text-purple-500">IN</span>
+            <div className="font-extrabold text-5xl flex  justify-center  underline my-7 sm:my-6">
+              <span className="">
+                LOG<span className="text-purple-500">IN</span>
               </span>
             </div>
-            <div className="flex flex-col ">
+
+            {/* Details Section */}
+            <div className="flex flex-col items-center">
               {/* Email/Username Input */}
-              <div className="flex flex-col px-10">
-                <div className="flex flex-row gap-10 items-center ">
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col pl-3 xl:flex-row  ">
                   <label
                     htmlFor="emailUsername"
-                    className="pl-5 font-bold text-xl my-5 w-fit "
+                    className="pl- font-bold text-xl w-fit "
                   >
-                    <span className="text-3xl">Email or Username</span>
+                    <span className="text-xl sm:text-2xl xl:text-3xl">
+                      Email or Username :
+                    </span>
                   </label>
 
-                  <div className="flex gap-6 items-center relative top-1">
-                    <div className="flex gap-3">
+                  <div className="flex gap-3 mt-0 mb-2 sm:mb-0 items-center relative right-5 ">
+                    <div className="flex gap-2">
                       <input
                         type="radio"
                         name="loginType"
                         id="usernameRadio"
                         className="radio focus:border-none cursor-pointer"
-                        onClick={() => setwhichRadio("username")}
+                        onClick={() => {
+                          radioClick.current.focus();
+                          setwhichRadio("username");
+                        }}
                         defaultChecked
                       />
                       <label
                         htmlFor="usernameRadio"
-                        className="font-bold text-xl cursor-pointer"
+                        className="font-medium text-xl cursor-pointer"
                       >
                         Username
                       </label>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                       <input
                         type="radio"
                         name="loginType"
                         id="emailRadio"
                         className="radio focus:border-none text-3xl cursor-pointer"
-                        onClick={() => setwhichRadio("email")}
+                        onClick={() => {
+                          radioClick.current.focus();
+                          setwhichRadio("username");
+                        }}
                       />
                       <label
                         htmlFor="emailRadio"
-                        className="font-bold text-xl w-fit cursor-pointer"
+                        className="font-medium text-xl w-fit cursor-pointer"
                       >
                         Email
                       </label>
@@ -120,8 +128,10 @@ export default function Login() {
                   </div>
                 </div>
 
-                <div className="flex gap-5 mb-3">
+                {/* Input Field */}
+                <div className="w-full mb-3 ">
                   <input
+                    ref={radioClick}
                     type="text"
                     name={whichRadio === "email" ? "email" : "username"}
                     value={
@@ -131,33 +141,34 @@ export default function Login() {
                     }
                     placeholder="Email or Username"
                     id="emailUsername"
-                    className="inputField w-96 "
+                    className="inputField placeholder:text-md py-1 pl-3 pr-16"
                     onChange={handleChange}
                   />
                 </div>
               </div>
 
               {/* Password Input */}
-              <div className="flex flex-col px-10">
+              <div className="flex flex-col gap-2 items-center ">
                 <label
                   htmlFor="password"
-                  className="px-5 font-bold text-3xl my-5 w-fit"
+                  className="pl-3 font-bold text-xl w-fit "
                 >
-                  Password
+                  <span className="text-xl sm:text-2xl xl:text-3xl">
+                    Password
+                  </span>
                 </label>
-                <div className="relative">
+                <div className="w-full group relative mb-3">
                   <input
                     type={eyeState === eyeCross ? "password" : "text"}
                     name="password"
                     value={loginData.password}
-                    id="password"
                     placeholder="Enter your password"
-                    className="inputField  "
+                    id="password"
+                    className="inputField placeholder:text-md py-1 pl-3 pr-16"
                     onChange={handleChange}
                   />
                   <div className="group">
-                    <img
-                      onClick={() => {
+                    <img onClick={() => {
                         if (eyeState === eyeCross) {
                           setEyeState(eyeOpen);
                         } else {
@@ -165,38 +176,48 @@ export default function Login() {
                         }
                       }}
                       src={eyeState}
-                      className="absolute w-10 right-4 top-4"
+                      className="absolute w-6 right-4 top-2 sm:w-10 sm:right-4 sm:top-4"
                       alt=""
                     />
-                    <div className="absolute right-1 hidden group-hover:block bg-gray-600 text-white text-md font-bold p-2 rounded-full px-3 shadow-lg">
+                    <div className="absolute border-4 border-red-500 hidden top-8 -right-5   group-hover:block bg-gray-600 text-white text-sm sm:text-md font-semibold sm:font-bold p-1 rounded-full px-3 shadow-lg">
                       {eyeState === eyeCross
                         ? "Show Password"
                         : "Hide Password"}
                     </div>
                   </div>
+                  
                 </div>
               </div>
 
-              <div className="text-center mt-5 cursor-pointer ">
+              {/* If no account , signup */}
+              <div className="text-center  mt-3 sm:mt-5 cursor-pointer ">
                 <Link to="/signup">
-                  <span className="font-bold text-2xl underline mt-5 ">
-                    Don't Have an Account? Sign Up !
+                  <span className=" font-semibold text-xl sm:font-bold sm:text-2xl underline mt-5 ">
+                    Don't Have an Account? Sign Up !!
                   </span>
                 </Link>
               </div>
-              <div className="flex justify-center mt-8 flex- ">
+
+              {/* Submit Button */}
+              <div className="flex justify-center mt-8 ">
                 <button
                   type="submit"
-                  className="border-x-4 border-y-2 border-gray-600  btnField font-medium text-3xl flex gap-4 items-center"
+                  className="border-x-4 border-y-2 p-3 pr-4 border-fuchsia-600  btnField font-bold text-3xl flex gap-2 items-center"
                 >
-                  <img src={plusAnimated} className="w-16" alt="Plus button" />
-                  <span>Log In</span>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/nfgmqqvs.json"
+                    trigger="loop"
+                    delay="3000"
+                    style={{ width: "45px", height: "45px" }}
+                    class=""
+                  ></lord-icon>
+                  <span className="text-pink-700 ">Log In</span>
                 </button>
               </div>
             </div>
           </form>
         </Background>
       </main>
-    </>
+    </div>
   );
 }
