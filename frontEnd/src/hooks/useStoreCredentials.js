@@ -7,6 +7,14 @@ import { useAccessStatusContext } from "../context/accessStatus.context";
 import { useActionStatusContext } from "../context/actionStatus.context";
 
 
+let fetchUrl;
+if (import.meta.env.VITE_ENV === "development") {
+  fetchUrl = "http://localhost:5000/api/manager/storecredentials"
+}
+else {
+  fetchUrl = "/api/manager/storecredentials"
+}
+
 
 // creating a broadcast channel using BroadCast WEB API to share the `submitStatus` across tabs/windows
 const broadcastChannel = new BroadcastChannel("submitStatusChannel")
@@ -35,8 +43,7 @@ export default function useStoreCredentials() {
     console.log(`The final object is:`, finalObject)
 
     try {
-      // const request = await fetch("http://localhost:5000/api/storage/storecredentials", {
-      const request = await fetch("/api/storage/storecredentials", {
+      const request = await fetch(fetchUrl, {
         method: "POST",
         credentials: "include",
         headers: {

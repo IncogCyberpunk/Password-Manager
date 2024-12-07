@@ -11,18 +11,19 @@ import Background from "../../components/Background.jsx";
 import Introduction from "../../components/Introduction.jsx";
 
 import useLogin from "../../hooks/useLogin.js";
-import plusAnimated from "../../assets/animatedGIF/login_animated.gif";
 import eyeOpen from "../../assets/animatedGIF/eyeOpen.svg";
 import eyeCross from "../../assets/animatedGIF/eyeClose.svg";
 
 export default function Login() {
   const { login } = useLogin();
   const radioClick = useRef(null);
+  const initialLoad = useRef(true);
 
   const [eyeState, setEyeState] = useState(eyeCross);
   const [whichRadio, setwhichRadio] = useState("username");
   const [finalLoginData, setFinalLoginData] = useState({});
   const [clickStatus, setClickStatus] = useState(false);
+  const [screenWidth, setscreenWidth] = useState(window.innerWidth);
 
   let [loginData, setLoginData] = useState({
     email: "",
@@ -65,7 +66,11 @@ export default function Login() {
       <Navbar />
       <main className="z-10">
         <Background>
-          <form className="p-5 rounded-lg z-50" onSubmit={handleSubmit} onLoad={()=> radioClick.current.focus()}>
+          <form className="p-5 rounded-lg z-50" onSubmit={handleSubmit} onLoad={()=> {
+            if(initialLoad.current){
+              radioClick.current.focus()
+              initialLoad.current = false
+            }} }>
             <Introduction />
             <div className="font-extrabold text-5xl flex  justify-center  underline my-7 sm:my-6">
               <span className="">
@@ -154,14 +159,13 @@ export default function Login() {
                   className="pl-3 font-bold text-xl w-fit "
                 >
                   <span className="text-xl sm:text-2xl xl:text-3xl">
-                    Password
+                    Password :
                   </span>
                 </label>
                 <div className="w-full group relative mb-3">
                   <input
                     type={eyeState === eyeCross ? "password" : "text"}
                     name="password"
-                    value={loginData.password}
                     placeholder="Enter your password"
                     id="password"
                     className="inputField placeholder:text-md py-1 pl-3 pr-16"
@@ -169,7 +173,7 @@ export default function Login() {
                   />
                   <div className="group">
                     <img onClick={() => {
-                        if (eyeState === eyeCross) {
+                        if (eyeState === eyeCross){
                           setEyeState(eyeOpen);
                         } else {
                           setEyeState(eyeCross);
@@ -179,11 +183,12 @@ export default function Login() {
                       className="absolute w-6 right-4 top-2 sm:w-10 sm:right-4 sm:top-4"
                       alt=""
                     />
-                    <div className="absolute border-4 border-red-500 hidden top-8 -right-5   group-hover:block bg-gray-600 text-white text-sm sm:text-md font-semibold sm:font-bold p-1 rounded-full px-3 shadow-lg">
+                    {/* Tooltip */}
+                    {screenWidth > 640 && (<div className="absolute hidden top-8 -right-5   group-hover:block bg-gray-600 text-white text-sm sm:text-md font-semibold sm:font-bold p-1 rounded-full px-3 shadow-lg">
                       {eyeState === eyeCross
                         ? "Show Password"
                         : "Hide Password"}
-                    </div>
+                    </div>)}
                   </div>
                   
                 </div>
@@ -192,7 +197,7 @@ export default function Login() {
               {/* If no account , signup */}
               <div className="text-center  mt-3 sm:mt-5 cursor-pointer ">
                 <Link to="/signup">
-                  <span className=" font-semibold text-xl sm:font-bold sm:text-2xl underline mt-5 ">
+                  <span className=" font-semibold text-xl sm:font-bold sm:text-2xl underline mt-5 " style={{textUnderlineOffset:"4px"}}>
                     Don't Have an Account? Sign Up !!
                   </span>
                 </Link>

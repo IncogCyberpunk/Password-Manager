@@ -5,6 +5,15 @@ import toast from "react-hot-toast"
 import { useActionStatusContext } from "../context/actionStatus.context";
 
 
+
+let fetchUrl;
+if (import.meta.env.VITE_ENV === "development") {
+  fetchUrl = "http://localhost:5000/api/auth/logout"
+}
+else {
+  fetchUrl = "/api/auth/logout"
+}
+
 export default function useLogout() {
     const { userId: _userId } = useAccessStatusContext();
     const navigate = useNavigate();
@@ -12,8 +21,7 @@ export default function useLogout() {
     const { setActionStatus } = useActionStatusContext();
     const performLogout = async () => {
         try {
-            // const data = await fetch("http://localhost:5000/api/auth/logout", {
-            const data = await fetch("/api/auth/logout", {
+            const data = await fetch(fetchUrl, {
                 method: "POST",
                 credentials: "include",
                 headers: {

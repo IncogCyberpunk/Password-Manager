@@ -3,12 +3,24 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 import { useAccessStatusContext } from "../context/accessStatus.context";
+import { useActionStatusContext } from "../context/actionStatus.context";
+
+
+let fetchUrl;
+if (import.meta.env.VITE_ENV === "development") {
+  fetchUrl = "http://localhost:5000/api/auth/login"
+}
+else {
+  fetchUrl = "/api/auth/login"
+}
 
 
 const useLogin = () => {
-  const {setAccessStatus} = useAccessStatusContext();
+  const { setAccessStatus } = useAccessStatusContext();
+  const {setActionStatus}= useActionStatusContext();
   const [error, setError] = useState(null);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+
 
   const login = async (finalLoginData) => {
     setError(null);
@@ -40,8 +52,7 @@ const useLogin = () => {
         checkField(username, password);
       }
 
-      // const response = await fetch("http://localhost:5000/api/auth/login", {
-      const response = await fetch("/api/auth/login", {    
+      const response = await fetch(fetchUrl, {
         method: "POST",
         headers: {
           "Content-Type": "Application/json",
@@ -56,8 +67,10 @@ const useLogin = () => {
       if (data.successMessage) {
         toast.success("Logged In Successfully");
         localStorage.setItem("accessToken", data.accessToken);
-        setAccessStatus(true)      
-        setTimeout(() =>{
+        setAccessStatus(true)
+        setActionStatus(true)
+        
+        setTimeout(() => {
           toast.success("Redirecting to Add Credentials")
           navigate("/addcredentials")
         }, 750);
@@ -69,25 +82,25 @@ const useLogin = () => {
         setError(data.errorMessage);
       }
     } catch (error) {
-      if(error.message){
+      if (error.message) {
         console.error("Error during login:", error);
       }
-      else{
+      else {
         toast.error("An unexpected error occurred");
         setError("An unexpected error occurred");
       }
     }
   };
 
-  function checkField(fieldA, password){
+  function checkField(fieldA, password) {
     if (!fieldA || !password) {
       const errorMsg = "Fields cannot be empty";
       toast.error(errorMsg);
-      throw  Error(errorMsg);
+      throw Error(errorMsg);
     }
   };
 
-  return { login,  error };
+  return { login, error };
 };
 
 export default useLogin;

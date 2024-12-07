@@ -2,7 +2,9 @@ import { createContext,useContext ,useState} from "react";
 
 const actionStatusContext = createContext();
 
-export const useActionStatusContext = () => useContext(actionStatusContext);
+export const useActionStatusContext = () => {
+    return useContext(actionStatusContext)
+};
 
 
 export const ActionStatusProvider = ({children}) => {

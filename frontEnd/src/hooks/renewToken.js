@@ -1,12 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+
+let fetchUrl;
+if (import.meta.env.VITE_ENV === "development") {
+  fetchUrl = "http://localhost:5000/api/auth/refresh-token"
+}
+else {
+  fetchUrl = "/api/auth/refresh-token"
+}
+
+
+
 export default function RenewToken() {
   const navigate = useNavigate();
 
   const handleTokenRenewal = async () => {
     try {
-      const response = await fetch("http:/localhost:5000/api/auth/refresh-token", {
+      const response = await fetch(fetchUrl, {
       // const response = await fetch("/api/auth/refresh-token", {
         method: "POST",
         headers: {

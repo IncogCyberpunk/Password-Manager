@@ -21,6 +21,8 @@ export default function Signup() {
     confirmPassword: "",
   });
 
+  const {signup}= useSignup();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -31,7 +33,7 @@ export default function Signup() {
     e.preventDefault();
 
     console.log(signupData);
-    await useSignup(signupData);
+    await signup(signupData);
   };
 
   return (
@@ -71,6 +73,7 @@ export default function Signup() {
                 <div className="w-full mb-3 ">
                   <input
                     type="text"
+                    name="fullName"
                     placeholder="Enter your full name"
                     id="fullName"
                     className="inputField placeholder:text-md py-1 pl-3 pr-16"
@@ -96,6 +99,7 @@ export default function Signup() {
                 <div className="w-full mb-3 ">
                   <input
                     type="text"
+                    name="email"
                     placeholder="Enter your email address"
                     id="email"
                     className="inputField placeholder:text-md py-1 pl-3 pr-16"
@@ -104,7 +108,7 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* Email */}
+              {/* Username */}
               <div className="flex flex-col items-center">
                 <div className="flex flex-col pl-3 xl:flex-row  ">
                   <label
@@ -121,6 +125,7 @@ export default function Signup() {
                 <div className="w-full mb-3 ">
                   <input
                     type="text"
+                    name="username"
                     placeholder="Enter a unique username"
                     id="username"
                     className="inputField placeholder:text-md py-1 pl-3 pr-16"
@@ -173,19 +178,19 @@ export default function Signup() {
               {/*Confirm Password */}
               <div className="flex flex-col gap-2 items-center ">
                 <label
-                  htmlFor="password"
+                  htmlFor="confirmPassword"
                   className="pl-3 font-bold text-xl w-fit "
                 >
                   <span className="text-xl sm:text-2xl xl:text-3xl">
-                    Password
+                    Confirm Password
                   </span>
                 </label>
                 <div className="w-full group relative mb-3">
                   <input
                     type={eyeState === eyeCross ? "password" : "text"}
-                    name="password"
+                    name="confirmPassword"
                     placeholder="Enter the password again"
-                    id="password"
+                    id="confirmPassword"
                     className="inputField placeholder:text-md py-1 pl-3 pr-16"
                     onChange={handleChange}
                   />
@@ -249,7 +254,7 @@ export default function Signup() {
                 <Link to="/login">
                   <span
                     className="font-semibold text-xl sm:text-2xl underline
-                   mt-5 "
+                   mt-5" style={{textUnderlineOffset:"4px"}}
                   >
                     Already Have an Account? Log In !
                   </span>

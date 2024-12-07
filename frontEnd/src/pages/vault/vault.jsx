@@ -116,7 +116,7 @@ export default function Vault() {
     <h1 className="text-center flex flex-col gap-14">
       <span className="text-7xl font-bold">No credentials in the vault !!</span>{" "}
       <button className="btnField w-fit mx-auto font-semibold text-3xl">
-        <Link to="/manager">Click to Add credentials to the Vault</Link>
+        <Link to="/addcredentials">Click to Add credentials to the Vault</Link>
       </button>
     </h1>
   );

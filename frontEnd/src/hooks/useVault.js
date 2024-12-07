@@ -1,20 +1,28 @@
 import { useState } from "react";
+import toast from "react-hot-toast"
 
 import { useAccessStatusContext } from "../context/accessStatus.context";
 import { useActionStatusContext } from "../context/actionStatus.context.jsx";
 
 
-import toast from "react-hot-toast"
+
+let fetchUrl;
+if (import.meta.env.VITE_ENV === "development") {
+  fetchUrl = "http://localhost:5000/api/manager/retrievecredentials"
+}
+else {
+  fetchUrl = "/api/manager/retrievecredentials"
+}
 
 export default function useVault() {
   const { setActionStatus } = useActionStatusContext();
   const { userId: _userId } = useAccessStatusContext();
   const [retrievedCredentials, setRetrievedCredentials] = useState([])
+  
 
   const retrieveCredentials = async () => {
     try {
-      // const data = await fetch("http://localhost:5000/api/storage/retrievecredentials", {
-      const data = await fetch("/api/storage/retrievecredentials", {
+      const data = await fetch(fetchUrl, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -31,8 +39,8 @@ export default function useVault() {
         toast.error(response.errorMessage);
         return null;
       }
-      else {
-        setActionStatus(true)
+      else if(response.successMessage?.includes("no credentials")){
+        return null;
       }
       return response[0]?.storage || null;
     } catch (error) {

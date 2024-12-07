@@ -19,10 +19,9 @@ function ProtectedRoute({ accessStatus, children, redirectPath = "/login" }) {
   }
   return children;
 }
-
+6
 function App() {
   const { accessStatus } = useAccessStatusContext();
-  console.log(`accessStatus is ${accessStatus}`);
 
 
   const router = createBrowserRouter([

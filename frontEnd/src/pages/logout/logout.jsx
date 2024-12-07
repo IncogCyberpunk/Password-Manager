@@ -4,16 +4,12 @@ import useLogout from "../../hooks/useLogout.js";
 
 export default function Logout() {
 
-  const navigate = useNavigate();
   const performLogout = useLogout();
 
   const handleLogout = (e) => {
     e.preventDefault();
 
-    console.log(`I am logout`);
     performLogout();
-    console.log(`Successfully logged out`);
-    navigate("/login");
   };
 
   return (

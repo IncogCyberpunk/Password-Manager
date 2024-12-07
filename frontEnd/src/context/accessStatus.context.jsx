@@ -5,6 +5,14 @@ import { useActionStatusContext } from "./actionStatus.context";
 
 export const accessStatusContext = createContext();
 
+let fetchUrl;
+if (import.meta.env.VITE_ENV === "development") {
+  fetchUrl = "http://localhost:5000/api/auth/login"
+}
+else {
+  fetchUrl = "/api/auth/login"
+}
+
 export const useAccessStatusContext = () => {
   return useContext(accessStatusContext);
 };
@@ -34,7 +42,10 @@ export const AccessStatusProvider = ({ children }) => {
 function monitorAccessJWT(setUserId,setAccessStatus){
   const accessToken = localStorage.getItem("accessToken");
 
-  if (!accessToken) {
+  if(accessToken){
+    console.log(`Searched for access token and found it`)
+  }
+  else if(!accessToken) {
     console.log("No access token found in localStorage");
     setAccessStatus(false);
     setUserId(null);
@@ -73,12 +84,9 @@ function monitorAccessJWT(setUserId,setAccessStatus){
 
 
 
-
 async function requestRenewal() {
   try {
-    const request = await fetch(
-      "http://localhost:5000/api/auth/refresh-token",
-      {
+    const request = await fetch(fetchUrl,{
         method: "POST",
         headers: {
           "Content-Type": "application/json",

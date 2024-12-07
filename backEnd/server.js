@@ -12,7 +12,11 @@ import credentialsRoutes from "./routes/credentialsRoutes/credentials.routes.js"
 const app =express();
 
 const __dirname=path.resolve();
-dotenv.config({path: path.join(__dirname,"../.env")});
+
+// useful if .env is not in the root directory i.e. same directory as this server.js 
+// dotenv.config({path: path.join(__dirname,"../.env")});
+
+dotenv.config();
 
 //express routes are case insensitive by default , but can be made sensitive by the following
 /* this only works for routes defined in the same file as this app.set, 
@@ -38,12 +42,14 @@ const port=process.env.PORT || 5500
 
 
 // SETTING UP CORS FOR ACCESS FROM FRONTEND DURING DEVELOPMENT
-// app.use(cors())                  // if u want whole app to accept requests made from other origin(different domain) 
-// const corsOptions={
-//     origin:"http://localhost:3000",
-//     methods: ['GET',"POST","PUT","DELETE"],
-//     credentials:true, // allows cookies and credentials
-// }
+app.use(cors()) 
+ // if u want whole app to accept requests made from other origin(different domain) 
+const corsOptions={
+    // origin: process.env.NODE_ENV === "development"? "http://localhost:3000": "/",
+    origin: "*",
+    methods: ['GET',"POST","PUT","DELETE"],
+    credentials:true, // allows cookies and credentials
+}
 
 app.use(express.static(path.join("../frontEnd/dist")))
 
@@ -51,11 +57,11 @@ app.use(express.static(path.join("../frontEnd/dist")))
 
 //cors setup only needed during development
 // app.use("/api/auth",cors(corsOptions),authRoutes);
-app.use("/api/auth",authRoutes);
+app.use("/api/auth",cors(corsOptions),authRoutes);
 
 // routes for managind the details stored using password manager i.e. password of different websites
-// app.use("/api/storage",cors(corsOptions),credentialsRoutes)
-app.use("/api/storage",credentialsRoutes)
+// app.use("/api/storage",cors(cors(corsOptions)),credentialsRoutes)
+app.use("/api/manager",cors(corsOptions),credentialsRoutes)
 
 app.get("/",(req,res) => {
     res.send("Hello World");
