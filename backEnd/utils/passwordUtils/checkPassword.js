@@ -8,9 +8,7 @@ const checkPassword = async (pass, hashPass,res) => {
         }
         else
         console.log("Incorrect Password")
-            return res.status(400).json({
-                "errorMessage": "Incorrect password"
-            })
+            return false
     } catch (error) {
         console.log("Error checking the password")
         console.log(error)

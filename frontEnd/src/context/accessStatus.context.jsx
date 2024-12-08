@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { useActionStatusContext } from "./actionStatus.context";
 
-export const accessStatusContext = createContext();
+const accessStatusContext = createContext();
 
 let fetchUrl;
 if (import.meta.env.VITE_ENV === "development") {
@@ -19,16 +19,18 @@ export const useAccessStatusContext = () => {
 
 export const AccessStatusProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
-  const [accessStatus, setAccessStatus] = useState();
+  const [accessStatus, setAccessStatus] = useState(false);
 
   const { actionStatus } = useActionStatusContext();
   const initalMonitor = useRef(true);
 
   // useEffect to perform the side effect of monitoring the access token
   useEffect(() => {
+    console.log(`action status changed, so checking accessStatus again`)
+  console.log("actionStatus inside useEffect:", actionStatus);
     if (actionStatus || initalMonitor.current) {
       initalMonitor.current = false;
-      monitorAccessJWT(setUserId,setAccessStatus);
+      monitorAccessJWT(setUserId,setAccessStatus,accessStatus);
     }
   }, [actionStatus]); // Dependency array ensures this runs only on mount
 
@@ -39,13 +41,13 @@ export const AccessStatusProvider = ({ children }) => {
   );
 };
 
-function monitorAccessJWT(setUserId,setAccessStatus){
+function monitorAccessJWT(setUserId,setAccessStatus,accessStatus){
   const accessToken = localStorage.getItem("accessToken");
 
   if(accessToken){
     console.log(`Searched for access token and found it`)
   }
-  else if(!accessToken) {
+  else{
     console.log("No access token found in localStorage");
     setAccessStatus(false);
     setUserId(null);
@@ -69,6 +71,8 @@ function monitorAccessJWT(setUserId,setAccessStatus){
 
     if (renewalTime > 0) {
       setAccessStatus(true);
+      console.log(`setting the accessStatus to `,accessStatus)
+      // no auto renewal logic currently
       // setTimeout(requestRenewal, renewalTime * 1000);
     } else {
       console.log("Token has already expired");

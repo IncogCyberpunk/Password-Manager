@@ -3,22 +3,31 @@ import { useAccessStatusContext } from "../context/accessStatus.context";
 import toast from "react-hot-toast"
 
 import { useActionStatusContext } from "../context/actionStatus.context";
+import { useEffect } from "react";
 
 
 
 let fetchUrl;
 if (import.meta.env.VITE_ENV === "development") {
-  fetchUrl = "http://localhost:5000/api/auth/logout"
+    fetchUrl = "http://localhost:5000/api/auth/logout"
 }
 else {
-  fetchUrl = "/api/auth/logout"
+    fetchUrl = "/api/auth/logout"
 }
 
 export default function useLogout() {
     const { userId: _userId } = useAccessStatusContext();
     const navigate = useNavigate();
 
-    const { setActionStatus } = useActionStatusContext();
+    const { actionStatus,setActionStatus } = useActionStatusContext();
+    useEffect(() => {
+        if (actionStatus) {
+            setTimeout(() => {
+                navigate("/login")
+            }, 1500);
+        }
+
+    }, [actionStatus])
     const performLogout = async () => {
         try {
             const data = await fetch(fetchUrl, {
@@ -41,9 +50,6 @@ export default function useLogout() {
                 toast.success("Logged out successfully. Redirecting to Login...")
 
                 setActionStatus(true);
-                setTimeout(() => {
-                    navigate("/login")
-                }, 1500);
                 return Promise.resolve(response.successMessage)
             }
         } catch (error) {

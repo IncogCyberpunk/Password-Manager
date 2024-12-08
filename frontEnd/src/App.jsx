@@ -11,6 +11,7 @@ import AddCredentials from "./pages/addCredentials/addCredentials.jsx";
 import Vault from "./pages/vault/vault.jsx";
 import toast from "react-hot-toast";
 
+
 function ProtectedRoute({ accessStatus, children, redirectPath = "/login" }) {
   console.log(`Insdie protected route, the accessSTatus is ${accessStatus}`);
   if (!accessStatus) {
@@ -19,7 +20,16 @@ function ProtectedRoute({ accessStatus, children, redirectPath = "/login" }) {
   }
   return children;
 }
-6
+
+// function ProtectedRoute( accessStatus) {
+//   console.log(`Insdie protected route, the accessSTatus is ${accessStatus}`);
+//   if (!accessStatus) {
+//     toast.error("You are not authorized. Please Login!!");
+//     return false;
+//   }
+//   return true;
+// }
+
 function App() {
   const { accessStatus } = useAccessStatusContext();
 
@@ -44,6 +54,9 @@ function App() {
           <AddCredentials />
         </ProtectedRoute>
       ),
+      // element: (
+      //   ProtectedRoute(accessStatus) ? <AddCredentials /> : <Navigate to="/login" />
+      // ),
     },
     {
       path: "/vault",

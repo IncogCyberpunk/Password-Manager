@@ -6,11 +6,7 @@ import Token from "../../models/token.models.js";
 
 const login = async (req, res, next) => {
     try {
-        //
-        //
-        // ADD A STATE IN REACT , SO THAT CLIENT CANNOT LOGIN IF HE'S LOGGED IN 
-        //
-        //
+        
         const { username, email, password } = req.body;
 
         let userExists;
@@ -36,7 +32,12 @@ const login = async (req, res, next) => {
         }
 
         const isPasswordValid = await checkPassword(password, userExists.password, res);
-        if(isPasswordValid) {
+        if(!isPasswordValid){
+            return res.status(400).json({
+                "errorMessage": "Incorrect password"
+            })
+        }
+        else{
             const accessToken = generateAccessJWT(userExists);
             const refreshToken = generateRefreshJWT(userExists);
             console.log("Logged In Successfully")

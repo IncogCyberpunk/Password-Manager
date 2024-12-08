@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import useLogout from "../../hooks/useLogout.js";
+import { useAccessStatusContext } from "../../context/accessStatus.context.jsx";
 
 
 export default function Logout() {
+  const {accessStatus}=useAccessStatusContext();
 
   const performLogout = useLogout();
 
@@ -10,11 +12,13 @@ export default function Logout() {
     e.preventDefault();
 
     performLogout();
+    console.log(`logged out`)
+    console.log(`the access status after logout is `,accessStatus)
   };
 
   return (
     <>
-      <div className="flex gap-2 items-center" onClick={handleLogout}>
+    <div className="flex gap-2 items-center" onClick={handleLogout}>
         <lord-icon
           src="https://cdn.lordicon.com/vhydshht.json"
           trigger="loop"
