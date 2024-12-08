@@ -8,15 +8,15 @@ import connectToMongoDB from "./db/connectToMongoDb.js";
 
 import authRoutes from "./routes/authRoutes/auth.routes.js"
 import credentialsRoutes from "./routes/credentialsRoutes/credentials.routes.js"
+import { pathToFileURL } from "url";
 
 const app =express();
 
 const __dirname=path.resolve();
 
-// useful if .env is not in the root directory i.e. same directory as this server.js 
-// dotenv.config({path: path.join(__dirname,"../.env")});
+// if .env is not in the root directory i.e. same directory as this server.js then following needed else `dotenv.config()` works fine
+dotenv.config({path:path.resolve(__dirname,"../.env")}) 
 
-dotenv.config();
 
 //express routes are case insensitive by default , but can be made sensitive by the following
 /* this only works for routes defined in the same file as this app.set, 
