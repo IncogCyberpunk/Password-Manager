@@ -16,19 +16,11 @@ else {
 
 
 const useLogin = () => {
-  const {  accessStatus } = useAccessStatusContext();
+  const {  accessStatus,setAccessStatus } = useAccessStatusContext();
   const {actionStatus,setActionStatus}= useActionStatusContext();
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(actionStatus && accessStatus){
-      setTimeout(() => {
-        toast.success("Redirecting to Add Credentials")
-        navigate("/addcredentials")
-      }, 3000);
-    }
-  },[actionStatus])
 
   const login = async (finalLoginData) => {
     setError(null);
@@ -75,7 +67,14 @@ const useLogin = () => {
       if (data.successMessage) {
         toast.success("Logged In Successfully");
         localStorage.setItem("accessToken", data.accessToken);
+
+        setAccessStatus(true)
         setActionStatus(true)
+        
+        setTimeout(() => {
+          toast.success("Redirecting to Add Credentials")
+          navigate("/addcredentials")
+        }, 750);
       } else if (data.errorMessage && data.errorMessage.toLowerCase().includes("no such user")) {
         toast.error(data.errorMessage);
         setError(data.errorMessage);

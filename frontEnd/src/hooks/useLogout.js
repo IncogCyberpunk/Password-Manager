@@ -20,14 +20,6 @@ export default function useLogout() {
     const navigate = useNavigate();
 
     const { actionStatus,setActionStatus } = useActionStatusContext();
-    useEffect(() => {
-        if (actionStatus) {
-            setTimeout(() => {
-                navigate("/login")
-            }, 1500);
-        }
-
-    }, [actionStatus])
     const performLogout = async () => {
         try {
             const data = await fetch(fetchUrl, {
@@ -50,6 +42,9 @@ export default function useLogout() {
                 toast.success("Logged out successfully. Redirecting to Login...")
 
                 setActionStatus(true);
+                setTimeout(() => {
+                    navigate("/login")
+                }, 1500);
                 return Promise.resolve(response.successMessage)
             }
         } catch (error) {
