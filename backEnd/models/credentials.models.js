@@ -7,12 +7,13 @@ const credentialsSchema=new mongoose.Schema({
         required: true,
         unique: true,
     },
-    storage: {
-        type:Array({
-            type: Map,
-            of: String,
-        })
-    },
+    storage: [
+        {
+            websiteName: { type: String, required: true },
+            loginEmail: { type: String, required: true },
+            loginPassword: { type: String, required: true },
+        },
+    ],
 })
 
 const Credentials = new mongoose.model("userCredentials",credentialsSchema)

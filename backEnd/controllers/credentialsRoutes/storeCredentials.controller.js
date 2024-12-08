@@ -16,6 +16,22 @@ export default async function storeCredentials(req, res) {
         if (!existingUser) {
             return res.status(404).json({ "errorMessage": "You are not a valid user !! Please login" });
         }
+        
+        const existingCredentials=await Credentials.find({_userId})
+        if(existingCredentials[0]?.storage?.length > 0){
+            // some method(which returns a boolean) is used to check if smth exists or not in an array, filter creates a new array with values satisfying a condition
+            // on finding first match `some` stops execution, filter doesn't it completes the process
+            const isDuplicate = existingCredentials[0].storage.some((item) => {
+                // return true only if all are true 
+                return item.websiteName===websiteName && item.loginEmail === loginEmail && item.loginPassword=== loginPassword
+            })
+
+
+            if(isDuplicate){
+                return res.status(400).json({"errorMessage":"Credentials already exist !!"})
+            }
+        }
+        
 
         try {
             const existingCredentials = await Credentials.findOne({ _userId });

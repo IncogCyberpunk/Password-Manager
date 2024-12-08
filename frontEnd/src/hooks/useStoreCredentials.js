@@ -75,6 +75,10 @@ export default function useStoreCredentials() {
         }, 2000)
         return Promise.reject(response.errorMessage)
       }
+      else if(response.errorMessage.includes("Credentials already exist !!")){
+        toast.error(response.errorMessage);
+        return;
+      }
 
       else {
         toast.error("Failed to store credentials.");

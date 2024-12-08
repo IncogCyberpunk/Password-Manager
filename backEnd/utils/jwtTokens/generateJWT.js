@@ -9,7 +9,7 @@ export  function generateAccessJWT(user) {
             username,
         }
         const claims = {
-            "expiresIn": "30m",
+            "expiresIn": "15m",
         }
         const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, claims)
         if (!token) throw Error;

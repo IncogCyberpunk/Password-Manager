@@ -62,7 +62,6 @@ const useLogin = () => {
       });
 
       const data = await response.json();
-      console.log("The response is", data);
 
       if (data.successMessage) {
         toast.success("Logged In Successfully");
@@ -73,7 +72,7 @@ const useLogin = () => {
         
         setTimeout(() => {
           toast.success("Redirecting to Add Credentials")
-          navigate("/addcredentials")
+          navigate("/vault")
         }, 750);
       } else if (data.errorMessage && data.errorMessage.toLowerCase().includes("no such user")) {
         toast.error(data.errorMessage);

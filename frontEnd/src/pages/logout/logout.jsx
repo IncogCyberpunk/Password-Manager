@@ -10,11 +10,10 @@ export default function Logout() {
 
   const handleLogout = (e) => {
     e.preventDefault();
-
     performLogout();
-    console.log(`logged out`)
-    console.log(`the access status after logout is `,accessStatus)
   };
+
+  const logoutStyles= screen.width < 768 ? {width: "25px", height: "25px"} : { width: "45px", height: "45px" }
 
   return (
     <>
@@ -23,8 +22,8 @@ export default function Logout() {
           src="https://cdn.lordicon.com/vhydshht.json"
           trigger="loop"
           delay="3000"
-          style={{ width: "45px", height: "45px" }}
-          class="invert"
+          style={logoutStyles}
+          class={`invert `}
         ></lord-icon>
         <span>Log Out</span>
       </div>

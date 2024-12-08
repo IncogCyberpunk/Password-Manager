@@ -59,7 +59,9 @@ const login = async (req, res, next) => {
 
             // after .json the control is gone , so .cookie before .json
             return res.status(200).cookie("refreshToken", refreshToken, {
+                // helps protect cookies from JS attacks
                 httpOnly: true,
+                // used to control whether cookies are sent with cross-site requests, providing some protection against cross-site request forgery (CSRF) attacks
                 sameSite: "Strict",
                 // sameSite :true means transmit data only over HTTPS , but in development we use localhost so enabled in development creates problems during developing
                 secure: process.env.NODE_ENV === "production" ? "Strict" : "none",

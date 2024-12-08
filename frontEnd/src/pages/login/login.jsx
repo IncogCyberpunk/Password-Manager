@@ -120,7 +120,7 @@ export default function Login() {
                         className="radio focus:border-none text-3xl cursor-pointer"
                         onClick={() => {
                           radioClick.current.focus();
-                          setwhichRadio("username");
+                          setwhichRadio("email");
                         }}
                       />
                       <label
