@@ -182,7 +182,7 @@ export default function Vault() {
               trigger={screen.screenWidth > 640 ? "hover" : "loop"}
               delay="1500"
               style={{ width: "45px", height: "45px" }}
-              class="relative bottom-4 left-5 md:left-0 md:bottom-0"
+              class="relative bottom-5 left-2 md:left-0 md:bottom-0"
             ></lord-icon>
             <span className="text-center">
               <span>All your credentials in one place</span>

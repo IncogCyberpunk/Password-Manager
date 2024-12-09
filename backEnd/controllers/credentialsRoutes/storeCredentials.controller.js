@@ -23,7 +23,7 @@ export default async function storeCredentials(req, res) {
             // on finding first match `some` stops execution, filter doesn't it completes the process
             const isDuplicate = existingCredentials[0].storage.some((item) => {
                 // return true only if all are true 
-                return item.websiteName===websiteName && item.loginEmail === loginEmail && item.loginPassword=== loginPassword
+                return item.websiteName.toLowerCase()===websiteName.toLowerCase() && item.loginEmail === loginEmail && item.loginPassword=== loginPassword
             })
 
 

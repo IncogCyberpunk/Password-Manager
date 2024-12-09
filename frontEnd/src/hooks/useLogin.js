@@ -16,8 +16,8 @@ else {
 
 
 const useLogin = () => {
-  const {  accessStatus,setAccessStatus } = useAccessStatusContext();
-  const {actionStatus,setActionStatus}= useActionStatusContext();
+  const { accessStatus, setAccessStatus } = useAccessStatusContext();
+  const { actionStatus, setActionStatus } = useActionStatusContext();
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -69,11 +69,10 @@ const useLogin = () => {
 
         setAccessStatus(true)
         setActionStatus(true)
-        
-        setTimeout(() => {
-          toast.success("Redirecting to Add Credentials")
-          navigate("/vault")
-        }, 750);
+
+        toast.success("Redirecting to Your Vault")
+        navigate("/vault")
+
       } else if (data.errorMessage && data.errorMessage.toLowerCase().includes("no such user")) {
         toast.error(data.errorMessage);
         setError(data.errorMessage);
@@ -82,7 +81,7 @@ const useLogin = () => {
         setError(data.errorMessage);
       }
 
-      
+
     } catch (error) {
       if (error.message) {
         console.error("Error during login:", error);
