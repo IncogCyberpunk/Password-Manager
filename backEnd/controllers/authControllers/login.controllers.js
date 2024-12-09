@@ -59,12 +59,12 @@ const login = async (req, res, next) => {
 
             // after .json the control is gone , so .cookie before .json
             return res.status(200).cookie("refreshToken", refreshToken, {
-                // helps protect cookies from JS attacks
+                // ensures cookies cannot be accessed by JS
                 httpOnly: true,
-                // used to control whether cookies are sent with cross-site requests, providing some protection against cross-site request forgery (CSRF) attacks
-                sameSite: "Strict",
-                // sameSite :true means transmit data only over HTTPS , but in development we use localhost so enabled in development creates problems during developing
-                secure: process.env.NODE_ENV === "production" ? "Strict" : "none",
+                // used to control whether cookies are to sent with cross-site requests, providing some protection against cross-site request forgery (CSRF) attacks
+                sameSite: process.env.NODE_ENV==="development" ? "Lax" : "Strict",
+                // `secure` flag is useful to transmit cookies only over HTTPS , preventing anyone from reading them by intercepting network trafic
+                secure: process.env.NODE_ENV==="production",
                 maxAge: 60 * 60 * 24 * 30 * 1000 // 30 days in milliseconds
             }).json({
                 "successMessage": "Success logging in",
