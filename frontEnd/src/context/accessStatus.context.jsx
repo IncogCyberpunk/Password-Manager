@@ -26,11 +26,9 @@ export const AccessStatusProvider = ({ children }) => {
 
   // useEffect to perform the side effect of monitoring the access token
   useEffect(() => {
-    console.log(`action status changed, so checking accessStatus again`)
-  console.log("actionStatus inside useEffect:", actionStatus);
     if (actionStatus || initalMonitor.current) {
       initalMonitor.current = false;
-      monitorAccessJWT(setUserId,setAccessStatus,accessStatus);
+      monitorAccessJWT(setUserId,setAccessStatus);
     }
   }, [actionStatus]); // Dependency array ensures this runs only on mount
 
@@ -41,14 +39,14 @@ export const AccessStatusProvider = ({ children }) => {
   );
 };
 
-function monitorAccessJWT(setUserId,setAccessStatus,accessStatus){
+function monitorAccessJWT(setUserId,setAccessStatus){
   const accessToken = localStorage.getItem("accessToken");
 
   if(accessToken){
     console.log(`Searched for access token and found it`)
   }
   else{
-    console.log("No access token found in localStorage");
+    console.log("No access token found !!");
     setAccessStatus(false);
     setUserId(null);
     return;
@@ -59,7 +57,6 @@ function monitorAccessJWT(setUserId,setAccessStatus,accessStatus){
     const userId = decoded._id;
     setUserId(userId);
 
-    console.log(`The userId is ${userId}`);
     const { exp: expiryTime } = decoded;
     const readableExpiryTime = new Date(expiryTime * 1000).toLocaleString();
     console.log(`Token expires at: ${readableExpiryTime}`);
@@ -71,10 +68,9 @@ function monitorAccessJWT(setUserId,setAccessStatus,accessStatus){
 
     if (renewalTime > 0) {
       setAccessStatus(true);
-      console.log(`setting the accessStatus to `,accessStatus)
       // no auto renewal logic currently
       // setTimeout(requestRenewal, renewalTime * 1000);
-    } else {
+    } else if(renewalTime<0) {
       console.log("Token has already expired");
       setAccessStatus(false);
       setUserId(userId);
@@ -87,7 +83,7 @@ function monitorAccessJWT(setUserId,setAccessStatus,accessStatus){
 };
 
 
-
+// use this function for auto renewal of JWT silently 
 async function requestRenewal() {
   try {
     const request = await fetch(fetchUrl,{

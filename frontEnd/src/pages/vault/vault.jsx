@@ -7,30 +7,33 @@ import useVault from "../../hooks/useVault";
 import CopyBtn from "../../components/CopyBtn";
 
 import { useSubmitStatusContext } from "../../context/submitStatus.context";
+import useDeleteCredentials from "../../hooks/deleteCredentials";
 
-const broadcastChannel = new BroadcastChannel("submitStatusChannel");
 
 export default function Vault() {
+  const broadcastChannel = new BroadcastChannel("submitStatusChannel");
+  
   const [expand, setExpand] = useState(false)
+  const {performDelete}= useDeleteCredentials();
 
-  const { retrieveCredentials, retrievedCredentials, setRetrievedCredentials } =
-    useVault();
+  const { retrieveCredentials, retrievedCredentials = [], setRetrievedCredentials } = useVault();
 
   const { submitStatus, setSubmitStatus } = useSubmitStatusContext();
-  console.log(`The submit status is: `, submitStatus);
 
-  // useRef is used so that the vaule of initalRender is not changed during re-renders and 0 ms delay is only for initial render and not for re-renders helping keep track whether it is the initial render or not
   const initialRender = useRef(true);
 
   // useEffect for retrieving credentials from the server when submitStatus is true or when the component is initially rendered
   useEffect(() => {
     if (submitStatus || initialRender.current) {
-      retrieveCredentials().then((data) => {
+      retrieveCredentials()?.then((data) => {
         setRetrievedCredentials(data);
-        console.log(`useEffect ran and now turning submitStatus to false`);
         setSubmitStatus(false);
+      }).catch((err) => {
+        console.error("Error retrieving credentials:", err);
+        setRetrievedCredentials([]);
       });
     }
+    // initialRender.current = false;
   }, [submitStatus]);
 
   // useEffect's primary purpose it to listen for updates to states , so here used to listen for updates to submitStatus from the broadcastChannel
@@ -43,7 +46,7 @@ export default function Vault() {
         console.log(
           "Received update of submitStatus from the BroadcastChannel",
         );
-        setSubmitStatus(true);
+        setSubmitStatus(false);
       }
     };
 
@@ -73,11 +76,11 @@ export default function Vault() {
       </tr>
     </thead>
     <tbody>
-      {retrievedCredentials.map((item, index) => {
+      {retrievedCredentials?.map((item, index) => {
         let whichBg = index % 2 === 0 ? "bg-purple-50" : "bg-white ";
 
         return (
-          <tr className={`${whichBg}  text-center `} key={index}>
+          <tr className={`${whichBg}  text-center `} key={item._id}>
             <td>
               {/* `td` are not block-level element that are table's layout's part and flex requires a block-level or inline-block element so used a div to use flex properly */}
               <div className="flex justify-between  px-6 py-4  border-b-2 border-r-2 hover:bg-green-300 border-gray-300">
@@ -113,11 +116,13 @@ export default function Vault() {
 
   const mobileViewTable = (
     <div className="px-4 space-y-4 ">
-      {retrievedCredentials.map((item, index) => {
+      {retrievedCredentials?.map((item, index) => {
         let whichBg = index % 2 === 0 ? "bg-purple-50" : "bg-white";
         return (
-          <div className={`${whichBg} px-4 py-3 rounded-lg shadow-md border-2 border-purple-600 `} key={index}>
+          <div className={`${whichBg} px-4 py-3 rounded-lg shadow-md border-2 border-purple-600 `} key={item._id}>
+            {/* Website name and delete entire credential */}
             <div className={`flex justify-between items-center ${expand && "border-b-2 border-purple-400"}`}>
+              {/* Expand/Collapse button */}
               <div onClick={() => setExpand(!expand)}>
                 <lord-icon
                   src={!expand ? "https://cdn.lordicon.com/xcrjfuzb.json" : "https://cdn.lordicon.com/ternnbni.json"}
@@ -126,10 +131,12 @@ export default function Vault() {
                   style={{ width: "28px", height: '28px' }}>
                 </lord-icon>
               </div>
+              {/* Website Name */}
               <div className="flex items-center">
                 <span className="text-gray-800 font-extrabold text-3xl">{item.websiteName}</span>
               </div>
-              <div>
+              {/* Delete credential button */}
+              <div onClick={()=> performDelete(item._id)}>
                 <lord-icon
                   src="https://cdn.lordicon.com/skkahier.json"
                   trigger={screen.width < 640 ? "click" : "hover"}
@@ -138,24 +145,19 @@ export default function Vault() {
                 </lord-icon>
               </div>
             </div>
+            
             {expand && <div>
-              {/* Website */}
-              <div className="flex justify-between items-center py-1">
-                <span className="font-extrabold underline text-lg text-gray-700">Website:</span>
-                <span className="text-gray-800">{item.websiteName}</span>
-                <CopyBtn textToCopy={item.websiteName} />
-              </div>
 
               {/* Login Email */}
               <div className="flex justify-between items-center py-1 ">
-                <span className="font-extrabold underline text-lg text-gray-700">Login Email:</span>
+                <span className="font-extrabold underline text-lg text-gray-900">Login Email :</span>
                 <span className="text-gray-800">{item.loginEmail}</span>
                 <CopyBtn textToCopy={item.loginEmail} />
               </div>
 
               {/* Password */}
               <div className="flex justify-between items-center py-1 ">
-                <span className="font-extrabold underline text-lg text-gray-700">Password:</span>
+                <span className="font-extrabold underline text-lg text-gray-900">Password :</span>
                 <span className="text-gray-800">{item.loginPassword}</span>
                 <CopyBtn textToCopy={item.loginPassword} />
               </div>
@@ -168,13 +170,21 @@ export default function Vault() {
 
 
   // `retrievedCredentials && retrievedCredentials.length > 0 ` is done so that credentialsTable is only rendered when it is not null, thus preventing the application breaking down when it is null
-  const credentialsContent = retrievedCredentials && retrievedCredentials.length > 0 && (screen.width < 768 ? mobileViewTable : laptopViewTable)
+  const credentialsContent = retrievedCredentials?.length > 0 && (screen.width < 768 ? mobileViewTable : laptopViewTable)
 
   const noCredentialsContent = (
     <h1 className="text-center flex flex-col items-center gap-14">
-      <span className="text-5xl md:text-7xl font-bold">
-        No credentials in the vault !!
-      </span>{" "}
+      <span className="text-5xl md:text-7xl font-bold ">
+        <span>No credentials in the vault</span>
+        <lord-icon
+          src="https://cdn.lordicon.com/keaiyjcx.json"
+          trigger={screen.width < 640 ? "loop" : "hover"}
+          delay="2000"
+          state="hover-error-4"
+          style={{width:"45px",height:"45px"}}
+          class="relative top-2 left-3">
+        </lord-icon>
+      </span>
       <button className="border-x-4 border-y-2 w-[calc(100%-80px)] md:w-full p-3 px-4 border-fuchsia-600  btnField font-bold text">
         <Link to="/addcredentials" className="flex items-center ">
           <lord-icon
@@ -225,7 +235,7 @@ export default function Vault() {
         </div>
       </header>
       <main>
-        {retrievedCredentials === null ? noCredentialsContent : credentialsContent}
+        {!(retrievedCredentials && retrievedCredentials?.length) > 0 ? noCredentialsContent : credentialsContent}
       </main>
       <Background />
     </>

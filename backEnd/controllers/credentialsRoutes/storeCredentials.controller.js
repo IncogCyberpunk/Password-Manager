@@ -6,7 +6,11 @@ import HashPassword from "../../utils/passwordUtils/hashPassword.js";
 export default async function storeCredentials(req, res) {
 
     try {
-        const { websiteName, loginEmail, loginPassword, _userId } = req.body;
+        let { websiteName, loginEmail, loginPassword, _userId } = req.body;
+
+        websiteName= websiteName.charAt(0).toUpperCase()+ websiteName.slice(1).toLowerCase();
+
+        
 
         const existingUser = await User.findOne({ _id: _userId });
         

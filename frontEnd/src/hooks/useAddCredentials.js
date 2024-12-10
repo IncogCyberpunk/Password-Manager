@@ -2,9 +2,9 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import validateEmail from "../utilities/validateEmail.js";
 
-import { useSubmitStatusContext } from "../context/submitStatus.context";
-import { useAccessStatusContext } from "../context/accessStatus.context";
-import { useActionStatusContext } from "../context/actionStatus.context";
+import { useSubmitStatusContext } from "../context/submitStatus.context.jsx";
+import { useAccessStatusContext } from "../context/accessStatus.context.jsx";
+import { useActionStatusContext } from "../context/actionStatus.context.jsx";
 
 
 let fetchUrl;
@@ -17,9 +17,9 @@ else {
 
 
 // creating a broadcast channel using BroadCast WEB API to share the `submitStatus` across tabs/windows
-const broadcastChannel = new BroadcastChannel("submitStatusChannel")
 
-export default function useStoreCredentials() {
+export default function useAddCredentials() {
+  const broadcastChannel = new BroadcastChannel("submitStatusChannel")
   const { setActionStatus } = useActionStatusContext();
   const { submitStatus, setSubmitStatus } = useSubmitStatusContext();
 
@@ -31,13 +31,18 @@ export default function useStoreCredentials() {
 
     if (!websiteName || !loginEmail || !loginPassword) {
       toast.error("Fields cannot be empty");
-      return Promise.reject("Validation failed");
+      return Promise.reject("Validation failed due to empty credentials");
     }
 
     if (!validateEmail(loginEmail)) {
       toast.error("Please enter a valid email");
       return Promise.reject("Invalid email format");
     }
+
+    if(websiteName.length > 10){
+      toast.error("Website Name is too long !!")
+      return Promise.reject() 
+  }
 
     const finalObject = { ...credentials, _userId };
     console.log(`The final object is:`, finalObject)

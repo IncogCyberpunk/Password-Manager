@@ -1,11 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 import eyeOpen from "../../assets/animatedGIF/eyeOpen.svg";
 import eyeCross from "../../assets/animatedGIF/eyeClose.svg";
-import rightArrow from "../../assets/animatedGIF/right_arrow.gif";
-import addImage from "../../assets/animatedGIF/pages.gif";
-import useStoreCredentials from "../../hooks/useStoreCredentials";
+import useAddCredentials from "../../hooks/useAddCredentials";
 
 import Navbar from "../../components/Navbar";
 import Background from "../../components/Background";
@@ -13,7 +10,7 @@ import Background from "../../components/Background";
 export default function AddCredentials() {
   const [eyeState, setEyeState] = useState(eyeCross);
 
-  const { storeCredentials } = useStoreCredentials();
+  const { storeCredentials } = useAddCredentials();
 
   // this initialization is important so as to make the inputs controlled by a state and not controlled by DOM
   const [credentials, setCredentials] = useState({
@@ -25,7 +22,7 @@ export default function AddCredentials() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setCredentials({ ...credentials, [name]: value }); // says to destructure the object and then update the key(name) with the value
+    setCredentials({ ...credentials, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -145,7 +142,7 @@ export default function AddCredentials() {
                       alt=""
                     />
                     {/* Tooltip */}
-                    {screen.screenWidth > 640 && (
+                    {screen.width > 640 && (
                       <div className="absolute hidden top-8 -right-5   group-hover:block bg-gray-600 text-white text-sm sm:text-md font-semibold sm:font-bold p-1 rounded-full px-3 shadow-lg">
                         {eyeState === eyeCross
                           ? "Show Password"

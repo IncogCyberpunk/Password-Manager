@@ -12,23 +12,17 @@ import Vault from "./pages/vault/vault.jsx";
 import toast from "react-hot-toast";
 
 
-function ProtectedRoute({ accessStatus, children, redirectPath = "/login" }) {
-  console.log(`Insdie protected route, the accessSTatus is ${accessStatus}`);
-  if (!accessStatus) {
-    toast.error("You are not authorized. Please Login!!");
-    return <Navigate to={redirectPath} />;
-  }
-  return children;
-}
-
-// function ProtectedRoute( accessStatus) {
+// function ProtectedRoute({ accessStatus, children, redirectPath = "/login" }) {
 //   console.log(`Insdie protected route, the accessSTatus is ${accessStatus}`);
 //   if (!accessStatus) {
 //     toast.error("You are not authorized. Please Login!!");
-//     return false;
+//     return <Navigate to={redirectPath} />;
 //   }
-//   return true;
+//   return children;
 // }
+
+
+
 
 function App() {
   const { accessStatus } = useAccessStatusContext();
@@ -37,7 +31,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Navigate to={accessStatus ? "/signup" : "/login"} />,
+      element: <Navigate to={accessStatus ? "/login" : "/signup"} />,
     },
     {
       path: "/login",
@@ -49,26 +43,41 @@ function App() {
     },
     {
       path: "/addcredentials",
-      element: (
-        <ProtectedRoute accessStatus={accessStatus}>
-          <AddCredentials />
-        </ProtectedRoute>
-      ),
       // element: (
-      //   ProtectedRoute(accessStatus) ? <AddCredentials /> : <Navigate to="/login" />
+      //   <ProtectedRoute accessStatus={accessStatus}>
+      //     <AddCredentials />
+      //   </ProtectedRoute>
       // ),
+      element: (
+        ProtectedRoute(accessStatus) ? <AddCredentials /> : <Navigate to="/login" />
+      ),
     },
     {
       path: "/vault",
+      // element: (
+      //   <ProtectedRoute accessStatus={accessStatus}>
+      //     <Vault />
+      //   </ProtectedRoute>
+    // ),
       element: (
-        <ProtectedRoute accessStatus={accessStatus}>
-          <Vault />
-        </ProtectedRoute>
+        ProtectedRoute(accessStatus) ? <Vault /> : <Navigate to="/login" />
       ),
-    },
+},
   ]);
 
-  return <RouterProvider router={router} />;
+return <RouterProvider router={router} />;
+}
+
+
+function ProtectedRoute(accessStatus) {
+  console.log(`Insdie protected route, the accessSTatus is ${accessStatus}`);
+  if (!accessStatus) {
+    toast.error("You are not authorized. Please Login!!");
+    return false;
+  }
+  else {
+    return true
+  }
 }
 
 export default App;

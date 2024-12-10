@@ -15,7 +15,6 @@ else {
 }
 
 export default function useVault() {
-  const { setActionStatus } = useActionStatusContext();
   const { userId: _userId } = useAccessStatusContext();
   const [retrievedCredentials, setRetrievedCredentials] = useState([])
   

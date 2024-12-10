@@ -41,7 +41,6 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setClickStatus(true);
-    console.log(`loginData is `, loginData);
 
     // Set finalLoginData first
     const finalData = {
@@ -56,7 +55,6 @@ export default function Login() {
   };
   useEffect(() => {
     if (clickStatus) {
-      console.log("finalLoginData is ", finalLoginData);
       login(finalLoginData);
     }
   }, [finalLoginData]);
