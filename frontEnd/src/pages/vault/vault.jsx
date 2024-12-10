@@ -11,6 +11,8 @@ import { useSubmitStatusContext } from "../../context/submitStatus.context";
 const broadcastChannel = new BroadcastChannel("submitStatusChannel");
 
 export default function Vault() {
+  const [expand, setExpand] = useState(false)
+
   const { retrieveCredentials, retrievedCredentials, setRetrievedCredentials } =
     useVault();
 
@@ -114,27 +116,50 @@ export default function Vault() {
       {retrievedCredentials.map((item, index) => {
         let whichBg = index % 2 === 0 ? "bg-purple-50" : "bg-white";
         return (
-          <div className={`${whichBg} p-4 rounded-lg shadow-md border-2 border-purple-600`} key={index}>
-            {/* Website */}
-            <div className="flex justify-between items-center py-1 ">
-              <span className="font-extrabold underline text-lg text-gray-700">Website:</span>
-              <span className="text-gray-800">{item.websiteName}</span>
-              <CopyBtn textToCopy={item.websiteName} />
+          <div className={`${whichBg} px-4 py-3 rounded-lg shadow-md border-2 border-purple-600 `} key={index}>
+            <div className={`flex justify-between items-center ${expand && "border-b-2 border-purple-400"}`}>
+              <div onClick={() => setExpand(!expand)}>
+                <lord-icon
+                  src={!expand ? "https://cdn.lordicon.com/xcrjfuzb.json" : "https://cdn.lordicon.com/ternnbni.json"}
+                  trigger="loop"
+                  delay="2000"
+                  style={{ width: "28px", height: '28px' }}>
+                </lord-icon>
+              </div>
+              <div className="flex items-center">
+                <span className="text-gray-800 font-extrabold text-3xl">{item.websiteName}</span>
+              </div>
+              <div>
+                <lord-icon
+                  src="https://cdn.lordicon.com/skkahier.json"
+                  trigger={screen.width < 640 ? "click" : "hover"}
+                  state="morph-trash-full-to-empty"
+                  style={{ width: "28px", height: '28px' }}>
+                </lord-icon>
+              </div>
             </div>
+            {expand && <div>
+              {/* Website */}
+              <div className="flex justify-between items-center py-1">
+                <span className="font-extrabold underline text-lg text-gray-700">Website:</span>
+                <span className="text-gray-800">{item.websiteName}</span>
+                <CopyBtn textToCopy={item.websiteName} />
+              </div>
 
-            {/* Login Email */}
-            <div className="flex justify-between items-center py-1 ">
-              <span className="font-extrabold underline text-lg text-gray-700">Login Email:</span>
-              <span className="text-gray-800">{item.loginEmail}</span>
-              <CopyBtn textToCopy={item.loginEmail} />
-            </div>
+              {/* Login Email */}
+              <div className="flex justify-between items-center py-1 ">
+                <span className="font-extrabold underline text-lg text-gray-700">Login Email:</span>
+                <span className="text-gray-800">{item.loginEmail}</span>
+                <CopyBtn textToCopy={item.loginEmail} />
+              </div>
 
-            {/* Password */}
-            <div className="flex justify-between items-center py-1 ">
-              <span className="font-extrabold underline text-lg text-gray-700">Password:</span>
-              <span className="text-gray-800">{item.loginPassword}</span>
-              <CopyBtn textToCopy={item.loginPassword} />
-            </div>
+              {/* Password */}
+              <div className="flex justify-between items-center py-1 ">
+                <span className="font-extrabold underline text-lg text-gray-700">Password:</span>
+                <span className="text-gray-800">{item.loginPassword}</span>
+                <CopyBtn textToCopy={item.loginPassword} />
+              </div>
+            </div>}
           </div>
         );
       })}
