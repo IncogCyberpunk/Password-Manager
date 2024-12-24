@@ -64,8 +64,6 @@ export default function Login() {
     <>
       <div className="max-w-[468px] sm:max-w-screen-sm">
         <Navbar />
-        <Globe />
-
         <main className="z-10">
           <Background>
             <form className="p-5 rounded-lg z-50" onSubmit={handleSubmit} onLoad={() => {
