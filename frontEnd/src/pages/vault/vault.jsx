@@ -24,7 +24,7 @@ export default function Vault() {
 
   // useEffect for retrieving credentials from the server when submitStatus is true or when the component is initially rendered
   useEffect(() => {
-    if (submitStatus || initialRender.current) {
+    if (submitStatus || (initialRender.current && window.location.href.includes("/vault"))) {
       retrieveCredentials()?.then((data) => {
         setRetrievedCredentials(data);
         setSubmitStatus(false);
@@ -33,15 +33,13 @@ export default function Vault() {
         setRetrievedCredentials([]);
       });
     }
-    // initialRender.current = false;
-  }, [submitStatus]);
 
-  // useEffect's primary purpose it to listen for updates to states , so here used to listen for updates to submitStatus from the broadcastChannel
-  useEffect(() => {
+    console.log(`for broadcastChannel the submitStatus is ${submitStatus}`)
     // this method automatically adds an event listener to the broadcastChannel and listens for messages
     broadcastChannel.onmessage = (e) => {
       const { submitStatus } = e.data;
       console.log(`message received : `, e);
+      
       if (submitStatus) {
         console.log(
           "Received update of submitStatus from the BroadcastChannel",
@@ -53,12 +51,34 @@ export default function Vault() {
     // BroadcastChannel sets up a event listener so , necessary to use cleanup function to remove previous event listener to prevent memory leaks
     return () => {
       broadcastChannel.close();
+      initialRender.current = false;
     };
+  }, [submitStatus]);
 
-    //An empty dependency array is used because the BroadcastChannel setup doesn't rely on any state or props and should initialize only once for the component's lifetime
-  }, []);
+  // // useEffect's primary purpose it to listen for updates to states , so here used to listen for updates to submitStatus from the broadcastChannel
+  // useEffect(() => {
+  //   // this method automatically adds an event listener to the broadcastChannel and listens for messages
+  //   broadcastChannel.onmessage = (e) => {
+  //     const { submitStatus } = e.data;
+  //     console.log(`message received : `, e);
+  //     if (submitStatus) {
+  //       console.log(
+  //         "Received update of submitStatus from the BroadcastChannel",
+  //       );
+  //       setSubmitStatus(false);
+  //     }
+  //   };
 
-  const laptopViewTable = (<table
+  //   // BroadcastChannel sets up a event listener so , necessary to use cleanup function to remove previous event listener to prevent memory leaks
+  //   return () => {
+  //     broadcastChannel.close();
+  //   };
+
+  //   //An empty dependency array is used because the BroadcastChannel setup doesn't rely on any state or props and should initialize only once for the component's lifetime
+  // }, []);
+
+  const laptopViewTable = (
+  <table
     style={{ width: "94rem" }}
     className=" bg-purple-100 mx-auto overflow-hidden rounded-3xl text-2xl border-gray-300 mb-40"
   >
@@ -112,7 +132,8 @@ export default function Vault() {
         );
       })}
     </tbody>
-  </table>)
+  </table>
+  )
 
   const mobileViewTable = (
     <div className="px-4 space-y-4 ">
@@ -150,15 +171,15 @@ export default function Vault() {
 
               {/* Login Email */}
               <div className="flex justify-between items-center py-1 ">
-                <span className="font-extrabold underline text-lg text-gray-900">Login Email :</span>
-                <span className="text-gray-800">{item.loginEmail}</span>
+                <span className="font-extrabold underline text-lg text-gray-900 text-nowrap">Login Email :</span>
+                <span className="text-gray-800 text-wrap">{item.loginEmail}</span>
                 <CopyBtn textToCopy={item.loginEmail} />
               </div>
 
               {/* Password */}
               <div className="flex justify-between items-center py-1 ">
-                <span className="font-extrabold underline text-lg text-gray-900">Password :</span>
-                <span className="text-gray-800">{item.loginPassword}</span>
+                <span className="font-extrabold underline text-lg text-gray-900 text-nowrap">Password :</span>
+                <span className="text-gray-800 text-wrap">{item.loginPassword}</span>
                 <CopyBtn textToCopy={item.loginPassword} />
               </div>
             </div>}

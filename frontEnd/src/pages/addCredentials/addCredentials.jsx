@@ -6,10 +6,11 @@ import useAddCredentials from "../../hooks/useAddCredentials";
 
 import Navbar from "../../components/Navbar";
 import Background from "../../components/Background";
+import { useSubmitStatusContext } from "../../context/submitStatus.context";
 
 export default function AddCredentials() {
   const [eyeState, setEyeState] = useState(eyeCross);
-
+  const {submitStatus}= useSubmitStatusContext();
   const { storeCredentials } = useAddCredentials();
 
   // this initialization is important so as to make the inputs controlled by a state and not controlled by DOM
@@ -29,6 +30,7 @@ export default function AddCredentials() {
     e.preventDefault();
 
     const storeResponse = await storeCredentials(credentials);
+    console.log(`in jsx, the submitStatus is ${submitStatus}`)
     console.log(`storeResponse is `, storeResponse);
   };
   return (

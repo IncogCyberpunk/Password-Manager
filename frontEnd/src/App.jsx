@@ -10,6 +10,7 @@ import Signup from "./pages/signup/signup.jsx";
 import AddCredentials from "./pages/addCredentials/addCredentials.jsx";
 import Vault from "./pages/vault/vault.jsx";
 import toast from "react-hot-toast";
+import Globe from "./components/Globe.jsx";
 
 
 // function ProtectedRoute({ accessStatus, children, redirectPath = "/login" }) {
@@ -31,7 +32,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Navigate to={accessStatus ? "/login" : "/signup"} />,
+      element: <Navigate to="/login" />
     },
     {
       path: "/login",
@@ -49,7 +50,7 @@ function App() {
       //   </ProtectedRoute>
       // ),
       element: (
-        ProtectedRoute(accessStatus) ? <AddCredentials /> : <Navigate to="/login" />
+        accessStatus ? <AddCredentials /> : <Navigate to="/login" />
       ),
     },
     {
@@ -60,8 +61,11 @@ function App() {
       //   </ProtectedRoute>
     // ),
       element: (
-        ProtectedRoute(accessStatus) ? <Vault /> : <Navigate to="/login" />
+        accessStatus ? <Vault /> : <Navigate to="/login" />
       ),
+
+      path:"/globe",
+      element: <Globe /> 
 },
   ]);
 
